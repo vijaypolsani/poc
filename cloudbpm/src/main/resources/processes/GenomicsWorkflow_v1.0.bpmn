@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://cloudbpm.bpm.cgi.com/bpm2">
+  <collaboration id="Collaboration">
+    <participant id="Sample_Library_Prep_QC_ID" name="Sample QC &amp; Library Prep" processRef="Sample_Library_QC"></participant>
+    <participant id="Proton_Sequencing_Process_ID" name="Ion Proton Sequencer" processRef="proton_sequencing_analysis"></participant>
+    <participant id="pgm_sequencing_analysis_ID" name="Ion PGM Sequencer" processRef="pgm_sequencing_analysis"></participant>
+    <participant id="Analysis_ID" name="Assembly &amp; Analysis" processRef="analysis_process"></participant>
+    <participant id="Common_Services_ID" name="Common Services" processRef="common_services"></participant>
+  </collaboration>
+  <process id="Sample_Library_QC" name="Sample_Library_QC" isExecutable="true">
+    <laneSet id="laneSet_Sample_Library_QC">
+      <lane id="lane1">
+        <flowNodeRef>GelQC_ID</flowNodeRef>
+        <flowNodeRef>NanoDrop_ID</flowNodeRef>
+        <flowNodeRef>fork_Id</flowNodeRef>
+        <flowNodeRef>Join_id</flowNodeRef>
+        <flowNodeRef>start_genome_wf</flowNodeRef>
+        <flowNodeRef>end_pgm_genome_wf</flowNodeRef>
+        <flowNodeRef>end_proton_genome_wf</flowNodeRef>
+        <flowNodeRef>camel_jms_file</flowNodeRef>
+        <flowNodeRef>Pgm_Sequencing_ID</flowNodeRef>
+        <flowNodeRef>Proton_Sequencing_ID</flowNodeRef>
+        <flowNodeRef>decision_sequencer</flowNodeRef>
+        <flowNodeRef>initiate_sample</flowNodeRef>
+        <flowNodeRef>sample_prep</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="start_genome_wf" name="Start" activiti:initiator="Start_Customer_Process">
+      <extensionElements>
+        <activiti:formProperty id="Customer_Name" name="Customer_Name">
+          <activiti:value id="Customer_Name" name="Customer_Name"></activiti:value>
+        </activiti:formProperty>
+      </extensionElements>
+    </startEvent>
+    <userTask id="GelQC_ID" name="GelQC" activiti:assignee="bpm" activiti:candidateGroups="staff,admin" activiti:formKey="gelQCForm"></userTask>
+    <userTask id="NanoDrop_ID" name="Nanodrop Concentration" activiti:assignee="bpm" activiti:candidateGroups="staff,admin" activiti:formKey="nanoDropForm"></userTask>
+    <userTask id="sample_prep" name="Emulsion PCR     Bead Purification          Library QC" default="pgm" activiti:assignee="bpm" activiti:candidateGroups="staff,admin" activiti:formKey="emulsionPcrForm">
+      <extensionElements>
+        <activiti:formProperty id="sequencer" name="sequencer" default="proton">
+          <activiti:value id="sequencer" name="sequencer"></activiti:value>
+        </activiti:formProperty>
+      </extensionElements>
+    </userTask>
+    <callActivity id="Pgm_Sequencing_ID" name="PGM Sequencing" calledElement="pgm_sequencing_analysis"></callActivity>
+    <parallelGateway id="fork_Id" name="fork"></parallelGateway>
+    <sequenceFlow id="flow24" sourceRef="fork_Id" targetRef="GelQC_ID"></sequenceFlow>
+    <sequenceFlow id="flow25" sourceRef="fork_Id" targetRef="NanoDrop_ID"></sequenceFlow>
+    <parallelGateway id="Join_id" name="Join"></parallelGateway>
+    <sequenceFlow id="flow26" sourceRef="NanoDrop_ID" targetRef="Join_id"></sequenceFlow>
+    <sequenceFlow id="flow27" sourceRef="GelQC_ID" targetRef="Join_id"></sequenceFlow>
+    <sequenceFlow id="flow28" sourceRef="Join_id" targetRef="sample_prep"></sequenceFlow>
+    <endEvent id="end_pgm_genome_wf" name="End"></endEvent>
+    <sequenceFlow id="flow48" sourceRef="Pgm_Sequencing_ID" targetRef="end_pgm_genome_wf"></sequenceFlow>
+    <callActivity id="Proton_Sequencing_ID" name="Proton Sequencing" calledElement="proton_sequencing_analysis"></callActivity>
+    <endEvent id="end_proton_genome_wf" name="End"></endEvent>
+    <sequenceFlow id="flow52" sourceRef="Proton_Sequencing_ID" targetRef="end_proton_genome_wf"></sequenceFlow>
+    <userTask id="initiate_sample" name="Start Sample QC" activiti:assignee="bpm" activiti:candidateGroups="staff,admin" activiti:formKey="initiateSampleForm"></userTask>
+    <sequenceFlow id="flow80" sourceRef="initiate_sample" targetRef="fork_Id"></sequenceFlow>
+    <sequenceFlow id="flow90" sourceRef="start_genome_wf" targetRef="camel_jms_file"></sequenceFlow>
+    <sequenceFlow id="flow91" sourceRef="camel_jms_file" targetRef="initiate_sample"></sequenceFlow>
+    <serviceTask id="camel_jms_file" name="Import Manifest" activiti:type="camel"></serviceTask>
+    <exclusiveGateway id="decision_sequencer" name="decision_sequencer"></exclusiveGateway>
+    <sequenceFlow id="pgm" name="pgm" sourceRef="decision_sequencer" targetRef="Pgm_Sequencing_ID">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${sequencer == 'pgm'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="proton" name="proton" sourceRef="decision_sequencer" targetRef="Proton_Sequencing_ID">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${sequencer == 'proton'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow119" sourceRef="sample_prep" targetRef="decision_sequencer"></sequenceFlow>
+  </process>
+  <process id="pgm_sequencing_analysis" name="pgm_sequencing_analysis" isExecutable="true">
+    <laneSet id="laneSet_pgm_sequencing_analysis">
+      <lane id="lane2">
+        <flowNodeRef>pgm_sequencer</flowNodeRef>
+        <flowNodeRef>end_pgm_seq</flowNodeRef>
+        <flowNodeRef>start_pgm_seq</flowNodeRef>
+        <flowNodeRef>pgm_sequencer_validation</flowNodeRef>
+        <flowNodeRef>pgm_send_to_analysis</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="start_pgm_seq" name="Start"></startEvent>
+    <userTask id="pgm_sequencer" name="PGM Sequencer" activiti:assignee="bpm" activiti:candidateGroups="staff,admin" activiti:formKey="pgmSequencerForm"></userTask>
+    <endEvent id="end_pgm_seq" name="End"></endEvent>
+    <serviceTask id="pgm_send_to_analysis" name="Send To Assembly &amp; Analysis" activiti:type="camel"></serviceTask>
+    <sequenceFlow id="flow111" sourceRef="pgm_sequencer" targetRef="pgm_send_to_analysis"></sequenceFlow>
+    <sequenceFlow id="flow112" sourceRef="pgm_send_to_analysis" targetRef="end_pgm_seq"></sequenceFlow>
+    <serviceTask id="pgm_sequencer_validation" name="Notify ERP" activiti:expression="#{validationService.validate(execution)}"></serviceTask>
+    <sequenceFlow id="flow113" sourceRef="start_pgm_seq" targetRef="pgm_sequencer_validation"></sequenceFlow>
+    <sequenceFlow id="flow114" sourceRef="pgm_sequencer_validation" targetRef="pgm_sequencer"></sequenceFlow>
+  </process>
+  <process id="proton_sequencing_analysis" name="proton_sequencing_analysis" isExecutable="true">
+    <laneSet id="laneSet_proton_sequencing_analysis">
+      <lane id="lane3">
+        <flowNodeRef>boundaryerror1</flowNodeRef>
+        <flowNodeRef>start_proton_seq</flowNodeRef>
+        <flowNodeRef>end_proton_seq</flowNodeRef>
+        <flowNodeRef>ion_proton_subprocess</flowNodeRef>
+        <flowNodeRef>call_common_services</flowNodeRef>
+        <flowNodeRef>send_completion_email</flowNodeRef>
+        <flowNodeRef>proton_sequencer_validation</flowNodeRef>
+        <flowNodeRef>proton_send_to_analysis</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="start_proton_seq" name="Start_Seq_Task"></startEvent>
+    <endEvent id="end_proton_seq" name="End"></endEvent>
+    <subProcess id="ion_proton_subprocess" name="Ion Proton Sequencer Process">
+      <startEvent id="startevent3" name="Start"></startEvent>
+      <userTask id="Washing" name="Washing" activiti:assignee="bpm" activiti:candidateGroups="staff,admin" activiti:formKey="washingForm"></userTask>
+      <sequenceFlow id="flow63" sourceRef="startevent3" targetRef="Washing"></sequenceFlow>
+      <userTask id="Elusion" name="Elusion" activiti:assignee="bpm" activiti:candidateGroups="staff,admin" activiti:formKey="elusionForm"></userTask>
+      <sequenceFlow id="flow64" sourceRef="Washing" targetRef="Elusion"></sequenceFlow>
+      <userTask id="chip_loading" name="Chip Loading" activiti:assignee="bpm" activiti:candidateGroups="staff,admin" activiti:formKey="chipLoadingForm"></userTask>
+      <sequenceFlow id="flow65" sourceRef="Elusion" targetRef="chip_loading"></sequenceFlow>
+      <endEvent id="endevent8" name="End"></endEvent>
+      <sequenceFlow id="flow66" sourceRef="chip_loading" targetRef="endevent8"></sequenceFlow>
+    </subProcess>
+    <boundaryEvent id="boundaryerror1" name="Error" attachedToRef="ion_proton_subprocess">
+      <errorEventDefinition></errorEventDefinition>
+    </boundaryEvent>
+    <callActivity id="call_common_services" name="Common Services" calledElement="common_services"></callActivity>
+    <sequenceFlow id="flow78" sourceRef="boundaryerror1" targetRef="call_common_services"></sequenceFlow>
+    <serviceTask id="send_completion_email" name="Send Completion eMail" activiti:type="mail">
+      <extensionElements>
+        <activiti:field name="to">
+          <activiti:string>vpolsani@completegenomics.com</activiti:string>
+        </activiti:field>
+        <activiti:field name="from">
+          <activiti:string>CloudBPM@completegenomics.com</activiti:string>
+        </activiti:field>
+        <activiti:field name="subject">
+          <activiti:string>Hello Cloud BPM</activiti:string>
+        </activiti:field>
+        <activiti:field name="html">
+          <activiti:string>Ion Proton Process WF Completed.</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow104" sourceRef="ion_proton_subprocess" targetRef="send_completion_email"></sequenceFlow>
+    <serviceTask id="proton_send_to_analysis" name="Send To Assembly &amp; Analysis" activiti:type="camel"></serviceTask>
+    <sequenceFlow id="flow109" sourceRef="send_completion_email" targetRef="proton_send_to_analysis"></sequenceFlow>
+    <sequenceFlow id="flow110" sourceRef="proton_send_to_analysis" targetRef="end_proton_seq"></sequenceFlow>
+    <serviceTask id="proton_sequencer_validation" name="Notify ERP" activiti:expression="#{validationService.validate(execution)}"></serviceTask>
+    <sequenceFlow id="flow115" sourceRef="start_proton_seq" targetRef="proton_sequencer_validation"></sequenceFlow>
+    <sequenceFlow id="flow116" sourceRef="proton_sequencer_validation" targetRef="ion_proton_subprocess"></sequenceFlow>
+  </process>
+  <process id="analysis_process" name="analysis_process" isExecutable="true">
+    <laneSet id="laneSet_analysis_process">
+      <lane id="lane6">
+        <flowNodeRef>start_analysis</flowNodeRef>
+        <flowNodeRef>end_analysis</flowNodeRef>
+        <flowNodeRef>wait_analysis</flowNodeRef>
+        <flowNodeRef>assembly_analysis</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="start_analysis" name="Start"></startEvent>
+    <serviceTask id="assembly_analysis" name="Assembly and Analysis" activiti:expression="#{analysisService.performAnalysis(execution)}"></serviceTask>
+    <endEvent id="end_analysis" name="End"></endEvent>
+    <sequenceFlow id="flow101" sourceRef="assembly_analysis" targetRef="end_analysis"></sequenceFlow>
+    <receiveTask id="wait_analysis" name="Wait For Analysis"></receiveTask>
+    <sequenceFlow id="flow107" sourceRef="start_analysis" targetRef="wait_analysis"></sequenceFlow>
+    <sequenceFlow id="flow108" sourceRef="wait_analysis" targetRef="assembly_analysis"></sequenceFlow>
+  </process>
+  <process id="common_services" name="common_services" isExecutable="true">
+    <laneSet id="laneSet_common_services">
+      <lane id="lane4">
+        <flowNodeRef>exception_services</flowNodeRef>
+        <flowNodeRef>retry_services</flowNodeRef>
+        <flowNodeRef>audit_services</flowNodeRef>
+        <flowNodeRef>split_common_services</flowNodeRef>
+        <flowNodeRef>join_common_services</flowNodeRef>
+        <flowNodeRef>end_common_services</flowNodeRef>
+        <flowNodeRef>start_common_services</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="start_common_services" name="Start"></startEvent>
+    <parallelGateway id="split_common_services" name="split_common_services"></parallelGateway>
+    <parallelGateway id="join_common_services" name="join_common_services"></parallelGateway>
+    <endEvent id="end_common_services" name="End"></endEvent>
+    <serviceTask id="exception_services" name="Exception Services" activiti:expression="#{exceptionService.logExceptionMessage(execution)}"></serviceTask>
+    <sequenceFlow id="flow82" sourceRef="split_common_services" targetRef="exception_services"></sequenceFlow>
+    <serviceTask id="retry_services" name="Retry Services" activiti:expression="#{retryService.performRetry(execution)}"></serviceTask>
+    <sequenceFlow id="flow83" sourceRef="split_common_services" targetRef="retry_services"></sequenceFlow>
+    <serviceTask id="audit_services" name="Audit Services" activiti:expression="#{auditService.logAudit(execution)}"></serviceTask>
+    <sequenceFlow id="flow84" sourceRef="split_common_services" targetRef="audit_services"></sequenceFlow>
+    <sequenceFlow id="flow85" sourceRef="exception_services" targetRef="join_common_services"></sequenceFlow>
+    <sequenceFlow id="flow86" sourceRef="retry_services" targetRef="join_common_services"></sequenceFlow>
+    <sequenceFlow id="flow87" sourceRef="audit_services" targetRef="join_common_services"></sequenceFlow>
+    <sequenceFlow id="flow88" sourceRef="start_common_services" targetRef="split_common_services"></sequenceFlow>
+    <sequenceFlow id="flow89" sourceRef="join_common_services" targetRef="end_common_services"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Collaboration">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration" id="BPMNPlane_Collaboration">
+      <bpmndi:BPMNShape bpmnElement="Common_Services_ID" id="BPMNShape_Common_Services_ID">
+        <omgdc:Bounds height="255.0" width="1053.0" x="0.0" y="1130.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Sample_Library_Prep_QC_ID" id="BPMNShape_Sample_Library_Prep_QC_ID">
+        <omgdc:Bounds height="207.0" width="1231.0" x="0.0" y="0.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="lane4" id="BPMNShape_lane4">
+        <omgdc:Bounds height="255.0" width="1027.0" x="26.0" y="1130.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="audit_services" id="BPMNShape_audit_services">
+        <omgdc:Bounds height="55.0" width="85.0" x="504.0" y="1325.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="retry_services" id="BPMNShape_retry_services">
+        <omgdc:Bounds height="55.0" width="85.0" x="504.0" y="1230.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exception_services" id="BPMNShape_exception_services">
+        <omgdc:Bounds height="55.0" width="85.0" x="504.0" y="1135.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end_common_services" id="BPMNShape_end_common_services">
+        <omgdc:Bounds height="35.0" width="35.0" x="770.0" y="1242.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="join_common_services" id="BPMNShape_join_common_services">
+        <omgdc:Bounds height="42.0" width="42.0" x="650.0" y="1239.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="split_common_services" id="BPMNShape_split_common_services">
+        <omgdc:Bounds height="42.0" width="42.0" x="402.0" y="1237.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="start_common_services" id="BPMNShape_start_common_services">
+        <omgdc:Bounds height="35.0" width="35.0" x="300.0" y="1240.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="lane6" id="BPMNShape_lane6">
+        <omgdc:Bounds height="200.0" width="1027.0" x="26.0" y="880.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="wait_analysis" id="BPMNShape_wait_analysis">
+        <omgdc:Bounds height="55.0" width="85.0" x="437.0" y="956.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end_analysis" id="BPMNShape_end_analysis">
+        <omgdc:Bounds height="35.0" width="35.0" x="727.0" y="967.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="start_analysis" id="BPMNShape_start_analysis">
+        <omgdc:Bounds height="35.0" width="35.0" x="345.0" y="967.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="lane2" id="BPMNShape_lane2">
+        <omgdc:Bounds height="200.0" width="1027.0" x="26.0" y="640.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="pgm_sequencer_validation" id="BPMNShape_pgm_sequencer_validation">
+        <omgdc:Bounds height="55.0" width="85.0" x="364.0" y="716.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="pgm_send_to_analysis" id="BPMNShape_pgm_send_to_analysis">
+        <omgdc:Bounds height="65.0" width="105.0" x="660.0" y="711.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end_pgm_seq" id="BPMNShape_end_pgm_seq">
+        <omgdc:Bounds height="35.0" width="35.0" x="799.0" y="727.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="pgm_sequencer" id="BPMNShape_pgm_sequencer">
+        <omgdc:Bounds height="55.0" width="85.0" x="509.0" y="716.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="start_pgm_seq" id="BPMNShape_start_pgm_seq">
+        <omgdc:Bounds height="35.0" width="35.0" x="272.0" y="727.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="lane3" id="BPMNShape_lane3">
+        <omgdc:Bounds height="344.0" width="1235.0" x="26.0" y="257.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="proton_sequencer_validation" id="BPMNShape_proton_sequencer_validation">
+        <omgdc:Bounds height="55.0" width="85.0" x="148.0" y="372.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="proton_send_to_analysis" id="BPMNShape_proton_send_to_analysis">
+        <omgdc:Bounds height="67.0" width="105.0" x="1070.0" y="366.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="send_completion_email" id="BPMNShape_send_completion_email">
+        <omgdc:Bounds height="55.0" width="85.0" x="922.0" y="372.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="call_common_services" id="BPMNShape_call_common_services">
+        <omgdc:Bounds height="55.0" width="85.0" x="540.0" y="520.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ion_proton_subprocess" id="BPMNShape_ion_proton_subprocess">
+        <omgdc:Bounds height="200.0" width="569.0" x="293.0" y="299.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end_proton_seq" id="BPMNShape_end_proton_seq">
+        <omgdc:Bounds height="35.0" width="35.0" x="1210.0" y="382.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="start_proton_seq" id="BPMNShape_start_proton_seq">
+        <omgdc:Bounds height="35.0" width="35.0" x="56.0" y="383.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent8" id="BPMNShape_endevent8">
+        <omgdc:Bounds height="35.0" width="35.0" x="825.0" y="399.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="chip_loading" id="BPMNShape_chip_loading">
+        <omgdc:Bounds height="55.0" width="85.0" x="680.0" y="387.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Elusion" id="BPMNShape_Elusion">
+        <omgdc:Bounds height="55.0" width="85.0" x="535.0" y="387.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Washing" id="BPMNShape_Washing">
+        <omgdc:Bounds height="55.0" width="85.0" x="390.0" y="387.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="startevent3" id="BPMNShape_startevent3">
+        <omgdc:Bounds height="35.0" width="35.0" x="298.0" y="399.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="boundaryerror1" id="BPMNShape_boundaryerror1">
+        <omgdc:Bounds height="30.0" width="30.0" x="347.0" y="483.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="lane1" id="BPMNShape_lane1">
+        <omgdc:Bounds height="207.0" width="1205.0" x="26.0" y="0.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="decision_sequencer" id="BPMNShape_decision_sequencer">
+        <omgdc:Bounds height="42.0" width="42.0" x="932.0" y="59.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="camel_jms_file" id="BPMNShape_camel_jms_file">
+        <omgdc:Bounds height="55.0" width="85.0" x="148.0" y="100.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="initiate_sample" id="BPMNShape_initiate_sample">
+        <omgdc:Bounds height="55.0" width="85.0" x="293.0" y="100.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end_proton_genome_wf" id="BPMNShape_end_proton_genome_wf">
+        <omgdc:Bounds height="35.0" width="35.0" x="1179.0" y="111.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Proton_Sequencing_ID" id="BPMNShape_Proton_Sequencing_ID">
+        <omgdc:Bounds height="55.0" width="85.0" x="1034.0" y="100.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end_pgm_genome_wf" id="BPMNShape_end_pgm_genome_wf">
+        <omgdc:Bounds height="35.0" width="35.0" x="1179.0" y="16.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Join_id" id="BPMNShape_Join_id">
+        <omgdc:Bounds height="42.0" width="42.0" x="685.0" y="59.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="fork_Id" id="BPMNShape_fork_Id">
+        <omgdc:Bounds height="42.0" width="42.0" x="438.0" y="106.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Pgm_Sequencing_ID" id="BPMNShape_Pgm_Sequencing_ID">
+        <omgdc:Bounds height="55.0" width="85.0" x="1034.0" y="5.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sample_prep" id="BPMNShape_sample_prep">
+        <omgdc:Bounds height="79.0" width="105.0" x="780.0" y="40.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="NanoDrop_ID" id="BPMNShape_NanoDrop_ID">
+        <omgdc:Bounds height="55.0" width="85.0" x="540.0" y="147.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="GelQC_ID" id="BPMNShape_GelQC_ID">
+        <omgdc:Bounds height="55.0" width="85.0" x="540.0" y="52.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="start_genome_wf" id="BPMNShape_start_genome_wf">
+        <omgdc:Bounds height="35.0" width="35.0" x="56.0" y="111.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="pgm_sequencing_analysis_ID" id="BPMNShape_pgm_sequencing_analysis_ID">
+        <omgdc:Bounds height="200.0" width="1053.0" x="0.0" y="640.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Proton_Sequencing_Process_ID" id="BPMNShape_Proton_Sequencing_Process_ID">
+        <omgdc:Bounds height="344.0" width="1261.0" x="0.0" y="257.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Analysis_ID" id="BPMNShape_Analysis_ID">
+        <omgdc:Bounds height="200.0" width="1053.0" x="0.0" y="880.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="assembly_analysis" id="BPMNShape_assembly_analysis">
+        <omgdc:Bounds height="55.0" width="85.0" x="582.0" y="956.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow119" id="BPMNEdge_flow119">
+        <omgdi:waypoint x="885.0" y="79.0"></omgdi:waypoint>
+        <omgdi:waypoint x="932.0" y="80.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow116" id="BPMNEdge_flow116">
+        <omgdi:waypoint x="233.0" y="399.0"></omgdi:waypoint>
+        <omgdi:waypoint x="293.0" y="399.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow115" id="BPMNEdge_flow115">
+        <omgdi:waypoint x="91.0" y="400.0"></omgdi:waypoint>
+        <omgdi:waypoint x="148.0" y="399.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow114" id="BPMNEdge_flow114">
+        <omgdi:waypoint x="449.0" y="743.0"></omgdi:waypoint>
+        <omgdi:waypoint x="509.0" y="743.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow113" id="BPMNEdge_flow113">
+        <omgdi:waypoint x="307.0" y="744.0"></omgdi:waypoint>
+        <omgdi:waypoint x="364.0" y="743.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow112" id="BPMNEdge_flow112">
+        <omgdi:waypoint x="765.0" y="743.0"></omgdi:waypoint>
+        <omgdi:waypoint x="799.0" y="744.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow111" id="BPMNEdge_flow111">
+        <omgdi:waypoint x="594.0" y="743.0"></omgdi:waypoint>
+        <omgdi:waypoint x="660.0" y="743.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow110" id="BPMNEdge_flow110">
+        <omgdi:waypoint x="1175.0" y="399.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1210.0" y="399.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="pgm" id="BPMNEdge_pgm">
+        <omgdi:waypoint x="974.0" y="80.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1076.0" y="60.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="0.0" y="0.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow91" id="BPMNEdge_flow91">
+        <omgdi:waypoint x="233.0" y="127.0"></omgdi:waypoint>
+        <omgdi:waypoint x="293.0" y="127.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow90" id="BPMNEdge_flow90">
+        <omgdi:waypoint x="91.0" y="128.0"></omgdi:waypoint>
+        <omgdi:waypoint x="148.0" y="127.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow109" id="BPMNEdge_flow109">
+        <omgdi:waypoint x="1007.0" y="399.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1070.0" y="399.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow108" id="BPMNEdge_flow108">
+        <omgdi:waypoint x="522.0" y="983.0"></omgdi:waypoint>
+        <omgdi:waypoint x="582.0" y="983.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow107" id="BPMNEdge_flow107">
+        <omgdi:waypoint x="380.0" y="984.0"></omgdi:waypoint>
+        <omgdi:waypoint x="437.0" y="983.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow104" id="BPMNEdge_flow104">
+        <omgdi:waypoint x="862.0" y="399.0"></omgdi:waypoint>
+        <omgdi:waypoint x="922.0" y="399.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow101" id="BPMNEdge_flow101">
+        <omgdi:waypoint x="667.0" y="983.0"></omgdi:waypoint>
+        <omgdi:waypoint x="727.0" y="984.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow28" id="BPMNEdge_flow28">
+        <omgdi:waypoint x="727.0" y="80.0"></omgdi:waypoint>
+        <omgdi:waypoint x="780.0" y="79.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow27" id="BPMNEdge_flow27">
+        <omgdi:waypoint x="625.0" y="79.0"></omgdi:waypoint>
+        <omgdi:waypoint x="685.0" y="80.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow26" id="BPMNEdge_flow26">
+        <omgdi:waypoint x="582.0" y="147.0"></omgdi:waypoint>
+        <omgdi:waypoint x="706.0" y="101.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow25" id="BPMNEdge_flow25">
+        <omgdi:waypoint x="480.0" y="127.0"></omgdi:waypoint>
+        <omgdi:waypoint x="582.0" y="147.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow24" id="BPMNEdge_flow24">
+        <omgdi:waypoint x="480.0" y="127.0"></omgdi:waypoint>
+        <omgdi:waypoint x="582.0" y="107.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow89" id="BPMNEdge_flow89">
+        <omgdi:waypoint x="692.0" y="1260.0"></omgdi:waypoint>
+        <omgdi:waypoint x="770.0" y="1259.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow88" id="BPMNEdge_flow88">
+        <omgdi:waypoint x="335.0" y="1257.0"></omgdi:waypoint>
+        <omgdi:waypoint x="402.0" y="1258.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow87" id="BPMNEdge_flow87">
+        <omgdi:waypoint x="546.0" y="1325.0"></omgdi:waypoint>
+        <omgdi:waypoint x="671.0" y="1281.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow86" id="BPMNEdge_flow86">
+        <omgdi:waypoint x="589.0" y="1257.0"></omgdi:waypoint>
+        <omgdi:waypoint x="650.0" y="1260.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow85" id="BPMNEdge_flow85">
+        <omgdi:waypoint x="546.0" y="1190.0"></omgdi:waypoint>
+        <omgdi:waypoint x="671.0" y="1239.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow84" id="BPMNEdge_flow84">
+        <omgdi:waypoint x="423.0" y="1279.0"></omgdi:waypoint>
+        <omgdi:waypoint x="546.0" y="1325.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow83" id="BPMNEdge_flow83">
+        <omgdi:waypoint x="444.0" y="1258.0"></omgdi:waypoint>
+        <omgdi:waypoint x="504.0" y="1257.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow82" id="BPMNEdge_flow82">
+        <omgdi:waypoint x="423.0" y="1237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="546.0" y="1190.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow80" id="BPMNEdge_flow80">
+        <omgdi:waypoint x="378.0" y="127.0"></omgdi:waypoint>
+        <omgdi:waypoint x="438.0" y="127.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow78" id="BPMNEdge_flow78">
+        <omgdi:waypoint x="377.0" y="498.0"></omgdi:waypoint>
+        <omgdi:waypoint x="582.0" y="520.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="proton" id="BPMNEdge_proton">
+        <omgdi:waypoint x="974.0" y="80.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1076.0" y="100.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="0.0" y="0.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow66" id="BPMNEdge_flow66">
+        <omgdi:waypoint x="765.0" y="414.0"></omgdi:waypoint>
+        <omgdi:waypoint x="825.0" y="416.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow65" id="BPMNEdge_flow65">
+        <omgdi:waypoint x="620.0" y="414.0"></omgdi:waypoint>
+        <omgdi:waypoint x="680.0" y="414.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow64" id="BPMNEdge_flow64">
+        <omgdi:waypoint x="475.0" y="414.0"></omgdi:waypoint>
+        <omgdi:waypoint x="535.0" y="414.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow63" id="BPMNEdge_flow63">
+        <omgdi:waypoint x="333.0" y="416.0"></omgdi:waypoint>
+        <omgdi:waypoint x="390.0" y="414.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow52" id="BPMNEdge_flow52">
+        <omgdi:waypoint x="1119.0" y="127.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1179.0" y="128.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow48" id="BPMNEdge_flow48">
+        <omgdi:waypoint x="1119.0" y="32.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1179.0" y="33.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

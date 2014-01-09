@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- START Simple Beans for Business Logic -->
+	<bean id="exceptionService" class="com.cgi.bpm.service.impl.ExceptionServiceImpl"></bean>
+	<bean id="retryService" class="com.cgi.bpm.service.impl.RetryServiceImpl"></bean>
+	<bean id="auditService" class="com.cgi.bpm.service.impl.AuditServiceImpl"></bean>
+	<bean id="analysisService" class="com.cgi.bpm.service.impl.AnalysisServiceImpl"></bean>
+	<bean id="globalExceptionHandler" class="com.cgi.bpm.esb.GlobalExceptionHandler"></bean>
+	<bean id="validationService" class="com.cgi.bpm.service.impl.ValidationServiceImpl"></bean>
+
+	<!-- END Simple Beans for Business Logic -->
+
+	<!-- START Spring Connection Factories -->
+	<!-- Spring JMS Template. A pooling based JMS provider -->
+
+
+	<!-- START ActiveMQ Pooled Connection Factories -->
+	<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://lnx-poc.completegenomics.com:61616" />
+	</bean>
+
+	<bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+		init-method="start" destroy-method="stop">
+		<property name="maxConnections" value="8" />
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+	</bean>
+
+	<bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+		<property name="connectionFactory" ref="pooledConnectionFactory" />
+		<property name="concurrentConsumers" value="10" />
+	</bean>
+
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="configuration" ref="jmsConfig" />
+	</bean>
+	<!-- END ActiveMQ Pooled Connection Factories -->
+</beans>

@@ -1,0 +1,32 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:cxf="http://camel.apache.org/schema/cxf"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd">
+
+	<import resource="classpath*:spring/bean-application-context.xml" />
+
+	<camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
+		<packageScan>
+			<package>com.cgi.bpm.esb.routes</package>
+		</packageScan>
+	</camelContext>
+
+	<camelContext id="IonProtonCamelContext" xmlns="http://camel.apache.org/schema/spring">
+		<route id="Import_Manifest">
+			<from uri="activemq:queue:inbox" />
+			<convertBodyTo type="java.lang.String"/>
+			<bean ref="validationService" method="validateTask" />
+			<multicast>
+				<pipeline>
+					<to uri="file://c://temp/inbox" />
+				</pipeline>
+				<pipeline>
+					<to uri="activemq:queue:outbox" />
+				</pipeline>
+			</multicast>
+		</route>
+	</camelContext>
+</beans>

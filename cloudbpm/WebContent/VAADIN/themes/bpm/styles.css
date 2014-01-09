@@ -1,0 +1,13 @@
+@import "../chameleon/styles.css";
+
+/** 
+ * "optional-" prefix means that the style is not necessarily used, it can be left blank
+ * "generated-" prefix means that the style is calculated from some other color, and not directly selected by the editor user
+ *
+ **/
+
+/* Application background */
+.v-app {
+    background: WhiteSmoke ;
+}
+
