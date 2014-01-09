@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 	
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/jms 
+                           http://www.springframework.org/schema/jms/spring-jms.xsd">
+	<context:component-scan base-package="org.springbyexample.jms" />
+				<!--  Bean definitions -->
+	<bean id="sendTsysPacketInfoToMq" class="com.kd.jms.mw.impl.SendTsysPacketInfoToMqImpl">
+		<property name="jmsTemplate" ref="jmsTemplate" />
+	</bean>
+	<bean id="retrieveTsysPacketInfoFromMq" class="com.kd.jms.mw.impl.RetrieveTsysPacketInfoFromMqImpl">
+		<property name="jmsTemplate" ref="jmsTemplate" />
+		<property name="destination" value="#[C3G_MQ_OUTPUT_QUEUE]" />
+	</bean>
+				<!-- JMS Setting Bean definitions -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="credentialsConnectionFactory" />
+		<property name="defaultDestination" ref="outputDestination" />
+		<property name="messageConverter">
+			<bean class="com.kd.jms.mw.converter.MwJsonMsgConverter" />
+		</property>
+	</bean>
+	<bean id="outputDestination" class="com.ibm.mq.jms.MQQueue">
+		<constructor-arg value="#[C3G_MQ_OUTPUT_QUEUE]" />
+		<property name="TargetClient" value="1">
+		</property>
+	</bean>
+	<bean id="credentialsConnectionFactory"
+		class="org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapter">
+		<property name="targetConnectionFactory" ref="connectionFactory" />
+		<property name="username" value="" />
+		<property name="password" value="" />
+	</bean>
+	<bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+		<property name="targetConnectionFactory" ref="internalJmsFactory" />
+		<property name="sessionCacheSize" value="10" />
+		<property name="cacheProducers" value="false" />
+	</bean>
+	<bean id="internalJmsFactory" class="com.ibm.mq.jms.MQQueueConnectionFactory">
+		<property name="queueManager" value="#[C3G_REQUEST_QUEUEMANAGER]" />
+		<property name="port" value="#[C3G_REQUEST_PORT]" />
+		<property name="channel" value="#[C3G_REQUEST_CHANNEL]" />
+		<property name="hostName" value="#[C3G_REQUEST_HOST_NAME]" />
+		<property name="transportType" value="#[TRANSPORT_TYPE]" />
+	</bean>
+</beans>

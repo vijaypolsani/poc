@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:sec="http://cxf.apache.org/configuration/security"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/util 
+	http://www.springframework.org/schema/util/spring-util-2.0.xsd
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!--- ======================================================================================== -->
+	<bean
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"        id = "mainProps">
+        <property name="placeholderPrefix">
+        	<value>#[</value>
+        </property>
+  		<property name="placeholderSuffix">
+        <value>]</value>
+  		</property>
+        <property name="locations">
+            <list>
+                <value>file:///${jboss.server.config.dir}/config.properties</value>
+            </list>
+        </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+    </bean>
+
+
+
+	<!-- 1. T1 TSYSXMLMessagingInquiryStub -->
+	<bean id="ts1InquiryStub" class="com.tsys.xmlmessaging.t1.TSYSXMLMessagingInquiryStub">
+		<constructor-arg name="targetEndpoint"
+			value="#[tsys.ts1.end.point.inq]" />
+	</bean>
+
+	<!-- 2. T1 TSYSXMLMessagingMaintenanceStub -->
+	<bean id="ts1MaintenanceStub"
+		class="com.tsys.xmlmessaging.t1.TSYSXMLMessagingMaintenanceStub">
+		<constructor-arg name="targetEndpoint"
+			value="#[tsys.ts1.end.point.maint]" />
+	</bean>
+
+	<!-- 3. CC TSYSXMLMessagingInquiryStub -->
+	<bean id="ts2InquiryStub" class="com.tsys.xmlmessaging.cc.TSYSXMLMessagingInquiryStub">
+		<constructor-arg name="targetEndpoint"
+			value="#[tsys.ts2.end.point.inq]" />
+	</bean>
+
+	<!-- 4. CC TSYSXMLMessagingMaintenanceStub -->
+	<bean id="ts2MaintenanceStub"
+		class="com.tsys.xmlmessaging.cc.TSYSXMLMessagingMaintenanceStub">
+		<constructor-arg name="targetEndpoint"
+			value="#[tsys.ts2.end.point.maint]" />
+	</bean>
+
+	<!-- 5. AD TSYSXMLMessagingInquiryStub -->
+	<bean id="adInquiryStub" class="com.tsys.xmlmessaging.ad.TSYSXMLMessagingInquiryStub">
+		<constructor-arg name="targetEndpoint"
+			value="#[tsys.ts2.end.point.inq]" />
+	</bean>
+
+	<!-- 6. AD TSYSXMLMessagingMaintenanceStub -->
+	<bean id="adMaintenanceStub"
+		class="com.tsys.xmlmessaging.ad.TSYSXMLMessagingMaintenanceStub">
+		<constructor-arg name="targetEndpoint"
+			value="#[tsys.ts2.end.point.maint]" />
+	</bean>
+
+	<!-- TSYS Client Beans -->
+
+	<bean id="inquireAuthSummaryClient"
+		class="com.kd.tsysclient.c3gcommon.ts1._2012._06.InquireAuthSummaryClient">
+		<property name="ts1InquiryStub" ref="ts1InquiryStub" />
+	</bean>
+	
+</beans>

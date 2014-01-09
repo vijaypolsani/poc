@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	
+	<appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="5000KB" />
+		<param name="maxBackupIndex" value="20" />
+		<param name="File" value="log.log" />
+		<param name="threshold" value="debug" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%p \t %d \t %C.%M.%L \t %m%n \t %X{appId}:%X{messageId} \t" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="levelMin" value="DEBUG" />
+		</filter>
+	</appender>
+	
+	<appender name="camelFileAppender" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="5000KB" />
+		<param name="maxBackupIndex" value="20" />
+		<param name="File" value="log.log" />
+		<param name="threshold" value="debug" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%p \t %d \t %C.%M.%L \t %m%n \t %X{appId} \t %X{messageId} \t" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="levelMin" value="DEBUG" />
+		</filter>
+	</appender>
+	
+	<logger name="org.apache.camel" additivity="false">
+		<level value="ERROR" />
+		<appender-ref ref="camelFileAppender" />
+	</logger>
+	
+	<logger name="com.wellsfargo" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="fileAppender" />
+	</logger>
+	
+	<root>
+		<level value="ERROR" />
+		<appender-ref ref="fileAppender" />
+	</root>
+	
+		
+</log4j:configuration>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+
+<!-- START SNIPPET: e1 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:cxf="http://camel.apache.org/schema/cxf"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd">
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:resources/tsys-client-config.xml" />
+	<import resource="classpath:resources/common-beans-config.xml" />
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+		<endpoint id="NewAppTimer"
+			uri="timer://NewAppTimer?fixedRate=true&amp;period=#[newapp.timer]" />
+		<endpoint id="AppInfoTimer"
+			uri="timer://AppInfoTimer?fixedRate=true&amp;period=#[appinfo.timer]" />
+		<endpoint id="AuthOptsTimer"
+			uri="timer://AuthOptsTimer?fixedRate=true&amp;period=#[authopt.timer]" />
+		<endpoint id="commonADMEndpoint"
+			uri="cxf:/ADMCommonService?serviceClass=com.kd.service.provider.c3g.adm._2012._06.ADMCommon" />
+		<onException>
+		
+			<exception>com.kd.exception.adm.AdmProcessingException</exception>
+			<redeliveryPolicy maximumRedeliveries="0" />
+			<handled>
+				<constant>true</constant>
+			</handled>
+			<to uri="admProcessingExceptionHandler" />
+			<bean ref="auditHandler" method="auditErrorResponse" />
+			<bean ref="newAppService" method="saveOrUpdateStatusWithResubmit" />
+		</onException>
+		<onException>
+			<exception>java.lang.Exception</exception>
+			<handled>
+				<constant>true</constant>
+			</handled>
+			<to uri="globalExceptionHandler" />
+			<bean ref="auditHandler" method="auditErrorResponse" />
+		</onException>
+
+		<!-- Exposing ADM as WS -->
+		<route id="ADMRoute">
+			<from ref="commonADMEndpoint" />
+			<recipientList>
+				<simple>direct:#[header.operationName]</simple>
+			</recipientList>
+		</route>
+		<!-- Timer to read from the Database and Invoke Update ADM Packet -->
+		<route id="StartNewAppRoute">
+			<from uri="ref:NewAppTimer" />
+			<setHeader headerName="ROUTE_ID">
+				<constant>StartNewAppRoute</constant>
+			</setHeader>
+			<split parallelProcessing="true" stopOnException="false"
+				executorServiceRef="adExecutorPool">
+				<method bean="newAppService" method="getNewAppNewStatus" />
+				<process ref="newAppRequestProcessor" />
+				<to uri="direct:updateNewApp" />
+			</split>
+		</route>
+		<!-- This route is for ADM NewAPP - UpdateNewApp Creation -->
+		<route id="UpdateNewAppRoute">
+			<from uri="direct:updateNewApp" />
+			<to uri="profileProcessor" />
+			<bean ref="auditHandler" method="auditRequest" />
+			<to uri="validationProcessor" />
+			<convertBodyTo type="com.kd.dto.adm._2012._06.UpdateNewAppDTO" />
+			<bean ref="updateNewAppClient" method="updateNewAppAD(*)" />
+			<convertBodyTo
+				type="com.kd.service.provider.c3g.adm.updatenewapp._2012._06.UpdateNewAppResponse" />
+			<bean ref="auditHandler" method="auditResponse" />
+			<convertBodyTo type="com.kd.persistence.adm.vo.AdmTs2" />
+			<bean ref="newAppService" method="saveOrUpdateAppId" />
+		</route>
+
+		<!-- Timer to read from the Database and Invoke Inquiry ADM Packet -->
+		<route id="StartInquireAppInfo">
+			<from uri="ref:AppInfoTimer" />
+			<setHeader headerName="ROUTE_ID">
+				<constant>StartInquireAppInfo</constant>
+			</setHeader>
+			<split parallelProcessing="true" stopOnException="false"
+				executorServiceRef="adExecutorPool">
+				<method bean="newAppService" method="getNewAppWaitingForCard" />
+				<process ref="newAppRequestProcessor" />
+				<to uri="direct:inquireAppInfo" />
+			</split>
+		</route>
+		<!-- This route is for Checking Status of InquireAppInfo - New Card Status -->
+		<route id="InquireAppInfoRoute">
+			<from uri="direct:inquireAppInfo" />
+			<to uri="profileProcessor" />
+			<bean ref="auditHandler" method="auditRequest" />
+			<to uri="validationProcessor" />
+			<convertBodyTo type="com.kd.dto.adm._2012._06.InquireAppInfoDTO" />
+			<bean ref="inquireAppInfoClient" method="callInquireAppInfoAD(*)" />
+			<convertBodyTo
+				type="com.kd.service.provider.c3g.adm.inquireappinfo._2012._06.InquireAppInfoResponse" />
+			<bean ref="auditHandler" method="auditResponse" />
+			<convertBodyTo type="com.kd.persistence.adm.vo.AdmTs2" />
+			<bean ref="newAppService" method="saveOrUpdateCardNbr" />
+		</route>
+
+		<!-- This route is for ADM AddAuthOpts by u205951 -->
+
+		<route id="StartAddAuthOpts">
+			<from uri="ref:AuthOptsTimer" />
+			<setHeader headerName="ROUTE_ID">
+				<constant>StartAddAuthOpts</constant>
+			</setHeader>
+			<split parallelProcessing="true" stopOnException="false"
+				executorServiceRef="adExecutorPool">
+				<method bean="newAppService" method="getDataForNewCard" />
+				<process ref="newAppRequestProcessor" />
+				<to uri="direct:addAuthOpts" />
+			</split>
+		</route>
+
+		<route id="addAuthOptsRoute">
+			<from uri="direct:addAuthOpts" />
+			<to uri="profileProcessor" />
+			<bean ref="auditHandler" method="auditRequest" />
+			<to uri="validationProcessor" />
+			<convertBodyTo type="com.kd.dto.adm._2012._06.AddAuthOptsDTO" />
+
+			<bean ref="addAuthOptsClient" method="callAddAuthOptsAD(*)" />
+			<convertBodyTo
+				type="com.kd.service.provider.c3g.adm.updatenewapp._2012._06.AddAuthOptsResponse" />
+			<bean ref="auditHandler" method="auditResponse" />
+			<convertBodyTo type="com.kd.persistence.adm.vo.AdmTs2" />
+			<bean ref="newAppService" method="updateStatus" />
+		</route>
+	</camelContext>
+</beans>

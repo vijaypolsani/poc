@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:cxf="http://camel.apache.org/schema/cxf"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd">
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:resources/tsys-client-config.xml" />
+	<import resource="classpath:resources/common-beans-config.xml" />
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+
+
+		<!-- <route id="testRoute" routePolicyRef="startPolicy" autoStartup="true"> 
+			<bean ref="fileAvailSer" method="reSetStatus()" /> <to uri="direct:inqPingClient" 
+			/> </route> -->
+
+		<route id="StartPingPacket">
+			<from
+				uri="timer://myTimer?fixedRate=true&amp;period=60000&amp;time=2012-11-8 15:55:30" />
+			<bean ref="fileAvailSer" method="reSetStatus()" />
+			<to uri="direct:inqPingClient" />
+		</route>
+
+		<route id="fileAvailRT">
+			<from uri="direct:inqPingClient" />
+			<setHeader headerName="ROUTE_ID">
+				<constant>fileAvailRT</constant>
+			</setHeader>
+			<bean ref="inqPingClient" method="callInqFileAvail()" />
+			<convertBodyTo
+				type="com.kd.service.provider.c3g.common.fileavail._2012._06.InqPingResponse" />
+			<bean ref="auditHandler" method="auditResponse" />
+
+			<filter>
+				<simple>${in.body.isJmsStatus} == false</simple>
+				<delay>
+					<constant>600000</constant>
+				</delay>
+				<to uri="direct:inqPingClient" />
+			</filter>
+
+			<filter>
+				<simple>${in.body.isJmsStatus} == true</simple>
+				<to uri="direct:fileAvailSer" />
+			</filter>
+		</route>
+
+		<route id="AvialSer">
+			<from uri="direct:fileAvailSer" />
+			<bean ref="fileAvailSer" method="updateStatus" />
+
+		</route>
+
+	</camelContext>
+</beans>

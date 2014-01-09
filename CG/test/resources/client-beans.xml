@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+          http://www.springframework.org/schema/beans 
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://cxf.apache.org/jaxws 
+          http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<jaxws:client id="c3gCoomonClient"
+		serviceClass="com.kd.service.provider.c3g.common._2012._06.C3GCommon"
+		address="https://c3gsit.kd.com/c3g/services/C3GCommonService" />
+
+	<bean id="proxyFactory" class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean">
+		<property name="serviceClass" value="com.kd.service.provider.c3g.common._2012._06.C3GCommon" />
+		<property name="address" value="http://localhost:8089/cg/services/CommonService" />
+	</bean>
+
+	<bean id="client" class="com.kd.service.provider.c3g.common._2012._06.C3GCommon" factory-bean="proxyFactory"
+		factory-method="create" />
+</beans>

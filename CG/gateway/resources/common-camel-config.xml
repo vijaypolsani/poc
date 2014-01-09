@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+
+<!-- START SNIPPET: e1 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:cxf="http://camel.apache.org/schema/cxf"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:resources/tsys-client-config.xml" />
+	<import resource="classpath:resources/common-beans-config.xml" />
+
+
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+	<endpoint id="commonEndpoint" uri="cxf:/C3GCommonService?serviceClass=com.kd.service.provider.c3g.common._2012._06.C3GCommon" />
+		<onException>
+			<exception>java.lang.Exception</exception>
+			<handled>
+				<constant>true</constant>
+			</handled>
+			<to uri="globalExceptionHandler" />
+			<bean ref="auditHandler" method="auditErrorResponse" />
+		</onException>
+		<onException>
+			<exception>com.kd.exception.MultiValidationException
+			</exception>
+			<camel:continued>
+				<camel:constant>true</camel:constant>
+			</camel:continued>
+
+			<to uri="validationExceptionHandler" />
+		</onException>
+
+		<route id="mainRoute">
+			<from ref="commonEndpoint" />
+			<recipientList>
+				<simple>direct:#[header.operationName]</simple>
+			</recipientList>
+		</route>
+
+
+		<route id="availableLimitInqRoute">
+			<from uri="direct:inquireAvailableLimit" />
+			<to uri="profileProcessor" />
+			<bean ref="auditHandler" method="auditRequest" />
+			<to uri="validationProcessor" />
+			
+			<bean ref="availableLimitRouting"></bean>
+			<convertBodyTo type="com.kd.service.provider.c3g.common.inquireavailablelimit._2012._06.InquireAvailableLimitResponseType"/>
+			<bean ref="auditHandler" method="auditResponse"/>
+		</route>
+
+
+	<route id="updateMCCG">
+			<from uri="direct:updateMCCG" />
+			<to uri="profileProcessor" />
+			<bean ref="auditHandler" method="auditRequest" />
+			<to uri="validationProcessor" />
+			<bean ref="updateMCCGRoutingSlip"></bean>
+			<convertBodyTo type="com.kd.service.provider.c3g.common.updatemccg._2012._06.UpdateMCCGResponseType"/>
+			<bean ref="auditHandler" method="auditResponse"/>
+		</route>
+	</camelContext>
+
+<camelContext xmlns="http://camel.apache.org/schema/spring">
+	 	<endpoint id="fileEndpoint" uri="#[uriFile]"/> 
+	 	<route id="pdfSplitter">
+			<from ref="fileEndpoint"/>
+			<onException>
+       			 <exception>java.lang.Exception</exception>
+        		 <redeliveryPolicy maximumRedeliveries="2" logRetryAttempted="true" retryAttemptedLogLevel="WARN"/>
+        		 <bean ref="fileSplitter" method="logRunStatus"/>
+    		</onException>
+    		
+		  	<bean ref="fileSplitter" method="splitFile"></bean>
+			<bean ref="fileSplitter" method="saveCustomerStatements"></bean>
+			<bean ref="fileSplitter" method="logRunStatus"/>	
+					
+		</route>
+		
+		<route>
+    		<from uri="timer://myTimer?fixedRate=true&amp;period=3600s"/>
+   			 <to uri="bean:EmailStatementReport?method=fetchCustomerStatement"/>
+  		</route>
+	</camelContext>
+</beans>
+<!-- END SNIPPET: e1 -->
