@@ -19,7 +19,7 @@
 
 	<!-- START ActiveMQ Pooled Connection Factories -->
 	<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-		<property name="brokerURL" value="tcp://lnx-poc.completegenomics.com:61616" />
+		<property name="brokerURL" value="tcp://lnx-poc.kd.com:61616" />
 	</bean>
 
 	<bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
