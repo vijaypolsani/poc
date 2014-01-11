@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core"
+<mule xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:twilio="http://www.mulesoft.org/schema/mule/twilio" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
@@ -9,33 +9,41 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
-http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd"
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd"
 	version="EE-3.5.0">
 
 	<twilio:config name="vj" accountSid="${accountSID}"
 		authToken="${authToken}" doc:name="Twilio">
 		<twilio:http-callback-config
-			connector-ref="connector.http.mule.default" domain="localhost" localPort="8080" remotePort="8080" />
+			connector-ref="connector.http.mule.default" domain="${domain}" localPort="${http.port}" remotePort="${http.port}" />
 	</twilio:config>
 	<http:connector name="connector.http.mule.default" doc:name="HTTP\HTTPS"/>
+    <byte-array-to-string-transformer name="Byte_Array_to_String" doc:name="Byte Array to String"/>
+    <http:body-to-parameter-map-transformer name="Body_to_Parameter_Map" doc:name="Body to Parameter Map"/>
 	<flow name="sendSmsMessage" doc:name="sendSmsMessage">
-		<http:inbound-endpoint address="http://localhost:8080/sendsms"
-			doc:name="HTTP" exchange-pattern="request-response" />
+		<http:inbound-endpoint address="${inboundAddress}"
+			doc:name="HTTP" exchange-pattern="request-response" transformer-refs="Body_to_Parameter_Map"/>
+        <logger message="Input Messge from SMS: #[message.payload]" level="INFO" doc:name="Logger"/>
+        <custom-transformer class="com.kd.poc.mule.ReadInputMsgTransformer" doc:name="Java"/>
+        <logger message="Data Before Choice: #[message.payload]" level="INFO" doc:name="Logger"/>
         <choice doc:name="Choice">
-            <when expression="message.payload.length() == 5" evaluator="groovy">
+            <when expression="message.payload.get('Body').trim().length() &gt; 5" evaluator="groovy">
                 <vm:outbound-endpoint exchange-pattern="one-way"  doc:name="PropertyDetails" path="propertDetails"/>
-                <http:outbound-endpoint exchange-pattern="request-response" host="www.zillow.com" port="80" path="webservice/GetDeepSearchResults.htm?zws-id=X1-ZWz1cu3vxb4ljf_52lx1&amp;address=2114+Bigelow+Ave&amp;citystatezip=Seattle%2C+WA" method="POST" doc:name="Zillow PropertySearch Call"/>
+                <http:outbound-endpoint exchange-pattern="request-response" host="www.zillow.com" port="80" path="webservice/GetDeepSearchResults.htm?zws-id=X1-ZWz1cu3vxb4ljf_52lx1&amp;address=2114+Bigelow+Ave&amp;citystatezip=Seattle%2C+WA" method="POST" doc:name="Zillow PropertySearch Call" transformer-refs="Byte_Array_to_String" responseTransformer-refs="Byte_Array_to_String"/>
+                <logger message="Data after Zillow Search Call: #[message.payload]" level="INFO" doc:name="Logger"/>
             </when>
-            <when expression="message.payload.length() > 5" evaluator="groovy">
+            <when expression="message.payload.get('Body').trim().length() == 5" evaluator="groovy">
                 <vm:outbound-endpoint exchange-pattern="one-way"  doc:name="Demographics" path="demographics"/>
-                <http:outbound-endpoint exchange-pattern="request-response" host="www.zillow.com" port="80" path="webservice/GetDemographics.htm?zws-id=X1-ZWz1cu3vxb4ljf_52lx1&amp;zip=94583" method="POST" doc:name="Zillow Demographics Call"/>
+                <http:outbound-endpoint exchange-pattern="request-response" host="www.zillow.com" port="80" path="webservice/GetDemographics.htm?zws-id=X1-ZWz1cu3vxb4ljf_52lx1&amp;zip=94583" method="POST" doc:name="Zillow Demographics Call" responseTransformer-refs="Byte_Array_to_String"/>
+                <logger message="Data after Demographics call: #[message.payload]" level="INFO" doc:name="Logger"/>
             </when>
             <otherwise>
                 <set-payload value="APP Home Listing Services did not understand your request!" doc:name="Set Payload"/>
             </otherwise>
         </choice>
         <vm:outbound-endpoint exchange-pattern="one-way" path="response" doc:name="response"/>
-        <byte-array-to-string-transformer doc:name="Byte Array to String"/>
+        <logger message="Data before sending SMS: #[message.payload]" level="INFO" doc:name="Logger"/>
         <scripting:transformer doc:name="Script">
             <scripting:script engine="Groovy"><![CDATA[payload.substring(0,159)]]></scripting:script>
         </scripting:transformer>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/SmsSchema/"
+	targetNamespace="http://www.example.org/SmsSchema/">
+	<element name="message">
+		<complexType>
+			<sequence>
+			<element name="From" type="string"></element>
+			<element name="To" type="string"></element>
+			<element name="Body" type="string" nillable="true"></element>
+			<element name="MediaUrl" type="string" nillable="true"></element>
+			</sequence>
+		</complexType>
+	</element>
+</schema>
