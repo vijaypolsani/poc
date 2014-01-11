@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:twilio="http://www.mulesoft.org/schema/mule/twilio" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/twilio http://www.mulesoft.org/schema/mule/twilio/current/mule-twilio.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd"
+	version="EE-3.5.0">
+
+	<twilio:config name="vj" accountSid="${accountSID}"
+		authToken="${authToken}" doc:name="Twilio">
+		<twilio:http-callback-config
+			connector-ref="connector.http.mule.default" domain="localhost" localPort="8080" remotePort="8080" />
+	</twilio:config>
+	<http:connector name="connector.http.mule.default" doc:name="HTTP\HTTPS"/>
+	<flow name="sendSmsMessage" doc:name="sendSmsMessage">
+		<http:inbound-endpoint address="http://localhost:8080/sendsms"
+			doc:name="HTTP" exchange-pattern="request-response" />
+        <choice doc:name="Choice">
+            <when expression="message.payload.length() == 5" evaluator="groovy">
+                <vm:outbound-endpoint exchange-pattern="one-way"  doc:name="PropertyDetails" path="propertDetails"/>
+                <http:outbound-endpoint exchange-pattern="request-response" host="www.zillow.com" port="80" path="webservice/GetDeepSearchResults.htm?zws-id=X1-ZWz1cu3vxb4ljf_52lx1&amp;address=2114+Bigelow+Ave&amp;citystatezip=Seattle%2C+WA" method="POST" doc:name="Zillow PropertySearch Call"/>
+            </when>
+            <when expression="message.payload.length() > 5" evaluator="groovy">
+                <vm:outbound-endpoint exchange-pattern="one-way"  doc:name="Demographics" path="demographics"/>
+                <http:outbound-endpoint exchange-pattern="request-response" host="www.zillow.com" port="80" path="webservice/GetDemographics.htm?zws-id=X1-ZWz1cu3vxb4ljf_52lx1&amp;zip=94583" method="POST" doc:name="Zillow Demographics Call"/>
+            </when>
+            <otherwise>
+                <set-payload value="APP Home Listing Services did not understand your request!" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+        <vm:outbound-endpoint exchange-pattern="one-way" path="response" doc:name="response"/>
+        <byte-array-to-string-transformer doc:name="Byte Array to String"/>
+        <scripting:transformer doc:name="Script">
+            <scripting:script engine="Groovy"><![CDATA[payload.substring(0,159)]]></scripting:script>
+        </scripting:transformer>
+
+		<twilio:send-sms-message config-ref="vj"
+			from="15104882577" to="16504096365" body="#[payload]"
+			doc:name="twilio" />
+	</flow>
+
+	<flow name="callbackFlow" doc:name="callbackFlow">
+		<logger message="Callback received: #[payload]" doc:name="Logger"
+			level="DEBUG" />
+
+		<http:body-to-parameter-map-transformer
+			doc:name="Body to Parameter Map" />
+
+		<logger message="SMS STATUS: #[payload['SmsStatus']]" level="DEBUG"
+			doc:name="Logger" />
+	</flow>
+</mule>

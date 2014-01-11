@@ -1,0 +1,2219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:ns2="http://www.mulesoft.org/schema/mule/devkit" xmlns:mule="http://www.mulesoft.org/schema/mule/core" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://www.mulesoft.org/schema/mule/twilio">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"></xs:import>
+  <xs:import schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" namespace="http://www.springframework.org/schema/beans"></xs:import>
+  <xs:import schemaLocation="http://www.mulesoft.org/schema/mule/core/current/mule.xsd" namespace="http://www.mulesoft.org/schema/mule/core"></xs:import>
+  <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="config" substitutionGroup="mule:abstract-extension" ns2:javaClass="org.mule.module.twilio.adapters.TwilioConnectorHttpCallbackAdapter">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="mule:abstractExtensionType">
+          <xs:annotation>
+            <xs:documentation>Twilio is a provider of cloud API for voice and SMS communications for customers who want to use phone services as
+marketing leverage.</xs:documentation>
+          </xs:annotation>
+          <xs:sequence>
+            <xs:element name="http-callback-config" maxOccurs="1" minOccurs="1">
+              <xs:annotation>
+                <xs:documentation>Config for http callbacks.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="mule:abstractExtensionType">
+                    <xs:attribute name="localPort" use="optional" type="xs:string"></xs:attribute>
+                    <xs:attribute name="remotePort" use="optional" type="xs:string"></xs:attribute>
+                    <xs:attribute name="domain" use="optional" type="xs:string"></xs:attribute>
+                    <xs:attribute name="async" default="false" use="optional" type="xs:boolean"></xs:attribute>
+                    <xs:attribute name="path" use="optional" type="xs:string"></xs:attribute>
+                    <xs:attribute name="connector-ref" use="optional" type="xs:string"></xs:attribute>
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="name" use="optional" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Give a name to this configuration so it can be later referenced by config-ref.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="accountSid" use="required" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The account sid to be used to connect to Twilio.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="authToken" use="required" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The authentication token to be used to connect to Twilio</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-account-details" substitutionGroup="mule:abstract-message-processor" type="GetAccountDetailsType">
+    <xs:annotation>
+      <xs:documentation>Returns a representation of an account.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetAccountDetailsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the account sid for which to get the details, leave empty to use to use</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-all-accounts-details" substitutionGroup="mule:abstract-message-processor" type="GetAllAccountsDetailsType">
+    <xs:annotation>
+      <xs:documentation>Retrieve a list of the Account resources belonging to the account used to make the API request. This list will
+include that Account as well.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetAllAccountsDetailsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="accountStatus" use="optional" type="AccountStatusEnumType">
+          <xs:annotation>
+            <xs:documentation>Only return Account resources with the given status. Can be closed, suspended or active.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only return the Account resources with friendly names that exactly match this name.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="update-account" substitutionGroup="mule:abstract-message-processor" type="UpdateAccountType">
+    <xs:annotation>
+      <xs:documentation>Allows you to modify the properties of an account.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="UpdateAccountType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="accountStatus" use="optional" type="AccountStatusEnumType">
+          <xs:annotation>
+            <xs:documentation>Alter the status of this account: use closed to irreversibly close this account, suspended to temporarily suspend it, or active to reactivate it.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Update the human-readable description of this account.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="create-sub-account" substitutionGroup="mule:abstract-message-processor" type="CreateSubAccountType">
+    <xs:annotation>
+      <xs:documentation>Creates a new subaccount.
+&lt;p/&gt;
+Subaccounts in Twilio are just accounts that are "owned" by another account. Using a subaccount you can segment
+each of your customers' use of Twilio and keep it separate from all the rest, allowing you to easily manage the
+activity and resources of each customer independently.
+&lt;p/&gt;
+For instance, if you are running a hosted service that relies on Twilio you can create a Twilio subaccount for
+each customer that signs up. Then if a customer closes his or her account with your service, you can simply
+deactivate the associated Twilio subaccount.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CreateSubAccountType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A human readable description of the new subaccount, up to 64 characters. Defaults to "SubAccount Created at {YYYY-MM-DD HH:MM meridiam".</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-sub-account-by-account-sid" substitutionGroup="mule:abstract-message-processor" type="GetSubAccountByAccountSidType">
+    <xs:annotation>
+      <xs:documentation>Subaccounts in Twilio are just accounts that are "owned" by another account. Using a subaccount you can segment
+each of your customers' use of Twilio and keep it separate from all the rest, allowing you to easily manage the
+activity and resources of each customer independently.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetSubAccountByAccountSidType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the account sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-sub-account-by-friendly-name" substitutionGroup="mule:abstract-message-processor" type="GetSubAccountByFriendlyNameType">
+    <xs:annotation>
+      <xs:documentation>Subaccounts in Twilio are just accounts that are "owned" by another account. Using a subaccount you can segment
+each of your customers' use of Twilio and keep it separate from all the rest, allowing you to easily manage the
+activity and resources of each customer independently.
+&lt;p/&gt;
+For instance, if you are running a hosted service that relies on Twilio you can create a Twilio subaccount for
+each customer that signs up. Then if a customer closes his or her account with your service, you can simply
+deactivate the associated Twilio subaccount.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetSubAccountByFriendlyNameType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the friendly name to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="exchange-phone-numbers-between-subaccounts" substitutionGroup="mule:abstract-message-processor" type="ExchangePhoneNumbersBetweenSubaccountsType">
+    <xs:annotation>
+      <xs:documentation>Trasfers a number between two subaccounts.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="ExchangePhoneNumbersBetweenSubaccountsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSidFrom" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the account sid from where to get the number, leave empty to use</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="incomingPhoneNumberSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the incoming phone number sid to transfer</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSidTo" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the account sid where to transfer the phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-available-phone-numbers" substitutionGroup="mule:abstract-message-processor" type="GetAvailablePhoneNumbersType">
+    <xs:annotation>
+      <xs:documentation>Returns a list of local AvailablePhoneNumber resource representations that match the specified filters, each representing a phone number that is currently available for provisioning within your account.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetAvailablePhoneNumbersType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="isoCountryCode" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>a country code in ISO 3166-1 alpha-2 format (e.g. 'US' for United States, 'CA' for Canada).</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="areaCode" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Find phone numbers in the specified Area Code. Only available for North American numbers.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="contains" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A pattern to match phone numbers on. Valid characters are '*' and [0-9a-zA-Z]. The '*' character will match any single digit.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="inRegion" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Limit results to a particular region (i.e. State/Province). Given a phone number, search within the same Region as that number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="inPostalCode" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Limit results to a particular postal code. Given a phone number, search within the same postal code as that number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-available-phone-numbers-advanced-seach" substitutionGroup="mule:abstract-message-processor" type="GetAvailablePhoneNumbersAdvancedSeachType">
+    <xs:annotation>
+      <xs:documentation>Returns a list of local AvailablePhoneNumber resource representations that match the specified filters, each representing a phone number that is currently available for provisioning within your account.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetAvailablePhoneNumbersAdvancedSeachType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="isoCountryCode" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>a country code in ISO 3166-1 alpha-2 format (e.g. 'US' for United States, 'CA' for Canada).</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="areaCode" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Find phone numbers in the specified Area Code. Only available for North American numbers.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="contains" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A pattern to match phone numbers on. Valid characters are '*' and [0-9a-zA-Z]. The '*' character will match any single digit.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="inRegion" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Limit results to a particular region (i.e. State/Province). Given a phone number, search within the same Region as that number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="inPostalCode" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Limit results to a particular postal code. Given a phone number, search within the same postal code as that number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="nearLatLong" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Given a latitude/longitude pair lat,long find geographically close numbers within Distance miles.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="nearPhoneNumber" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Given a phone number, find a geographically close number within Distance miles. Distance defaults to 25 miles.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="inLata" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Limit results to a specific Local access and transport area (LATA). Given a phone number, search within the same LATA as that number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="inRateCenter" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Limit results to a specific rate center, or given a phone number search within the same rate center as that number. Requires InLata to be set as well.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="distance" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies the search radius for a Near- query in miles. If not specified this defaults to 25 miles.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-available-toll-free-numbers" substitutionGroup="mule:abstract-message-processor" type="GetAvailableTollFreeNumbersType">
+    <xs:annotation>
+      <xs:documentation>Returns a list of toll-free AvailablePhoneNumber elements that match the specified filters, each representing a phone number that is currently available for provisioning within your account.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetAvailableTollFreeNumbersType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="isoCountryCode" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>a country code in ISO 3166-1 alpha-2 format (e.g. 'US' for United States, 'CA' for Canada).</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="contains" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A pattern to match phone numbers on. Valid characters are '*' and [0-9a-zA-Z]. The '*' character will match any single digit.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-outgoing-caller-id-by-outgoing-caller-id-sid" substitutionGroup="mule:abstract-message-processor" type="GetOutgoingCallerIdByOutgoingCallerIdSidType">
+    <xs:annotation>
+      <xs:documentation>Returns an outgoing caller id instance matching the given filters.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetOutgoingCallerIdByOutgoingCallerIdSidType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="outgoingCallerIdSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the outgoing caller id sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="update-outgoing-caller-id-by-outgoing-caller-id-sid" substitutionGroup="mule:abstract-message-processor" type="UpdateOutgoingCallerIdByOutgoingCallerIdSidType">
+    <xs:annotation>
+      <xs:documentation>Updates the caller id, and returns the updated resource if successful.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="UpdateOutgoingCallerIdByOutgoingCallerIdSidType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="outgoingCallerIdSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the outgoing caller id sid to update</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A human readable description of a Caller ID, with maximum length of 64 characters. Defaults to a nicely formatted version of the phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-all-outgoing-caller-ids" substitutionGroup="mule:abstract-message-processor" type="GetAllOutgoingCallerIdsType">
+    <xs:annotation>
+      <xs:documentation>Returns a list of OutgoingCallerId resource representations, each representing a Caller ID number valid for an account. The list includes paging information.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetAllOutgoingCallerIdsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="phoneNumber" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show the caller id resource that exactly matches this phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show the caller id resource that exactly matches this name.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="add-new-caller-id" substitutionGroup="mule:abstract-message-processor" type="AddNewCallerIdType">
+    <xs:annotation>
+      <xs:documentation>Adds a new CallerID to your account. After making this request, Twilio will return to you a validation code and Twilio will dial the phone number given to perform validation. The code returned must be entered via the phone before the CallerID will be added to your account.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="AddNewCallerIdType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="phoneNumber" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The phone number to verify. Should be formatted with a '+' and country code e.g., +16175551212 (E.164 format). Twilio will also accept unformatted US numbers e.g., (415) 555-1212, 415-555-1212.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A human readable description for the new caller ID with maximum length 64 characters. Defaults to a nicely formatted version of the number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="callDelay" use="optional" type="integerType">
+          <xs:annotation>
+            <xs:documentation>The number of seconds, between 0 and 60, to delay before initiating the validation call. Defaults to 0.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="extension" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Digits to dial after connecting the validation call.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="delete-outgoing-caller-id" substitutionGroup="mule:abstract-message-processor" type="DeleteOutgoingCallerIdType">
+    <xs:annotation>
+      <xs:documentation>Deletes the caller ID from the account. Returns an HTTP 204 response if successful, with no body.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DeleteOutgoingCallerIdType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="outgoingCallerIdSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the outgoing caller id sid to delete</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-incoming-phone-numbers-by-incoming-phone-number-sid" substitutionGroup="mule:abstract-message-processor" type="GetIncomingPhoneNumbersByIncomingPhoneNumberSidType">
+    <xs:annotation>
+      <xs:documentation>Returns an incoming phone numbers matching the given query filters.
+&lt;p/&gt;
+An IncomingPhoneNumber instance resource represents a Twilio phone number purchased from Twilio or ported to Twilio.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetIncomingPhoneNumbersByIncomingPhoneNumberSidType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="incomingPhoneNumberSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the incoming phone number sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="update-incoming-phone-numbers" substitutionGroup="mule:abstract-message-processor" type="UpdateIncomingPhoneNumbersType">
+    <xs:annotation>
+      <xs:documentation>Tries to update the incoming phone number's properties, and returns the updated resource representation if successful.
+&lt;p/&gt;
+* An IncomingPhoneNumber instance resource represents a Twilio phone number purchased from Twilio or ported to Twilio.
+&lt;p/&gt;
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="UpdateIncomingPhoneNumbersType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="incomingPhoneNumberSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the incoming phone number sid to use</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A human readable description of the new incoming phone number resource, with maximum length 64 characters.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="apiVersion" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Calls to this phone number will start a new TwiML session with this API version. Either 2010-04-01 or 2008-08-01.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voiceUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The URL that Twilio should request when somebody dials the new phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="voiceMethod" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method that should be used to request the VoiceUrl. Must be either GET or POST. Defaults to POST.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voice-fallback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request if an error occurs requesting or executing the TwiML at Url.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="status-callback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request to pass statusCallback parameters (such as call ended) to your application.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="voiceCallerIdLookup" use="optional" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>Do a lookup of a caller's name from the CNAM database and post it to your app. Either true or false.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voiceApplicationSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The 34 character sid of the application Twilio should use to handle phone calls to this number. If a VoiceApplicationSid is present, Twilio will ignore all of the voice urls above and use those set on the application instead.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="smsUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The URL that Twilio should request when somebody sends an SMS to the phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="smsMethod" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method that should be used to request the SmsUrl. Must be either GET or POST. Defaults to POST.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="sms-fallback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request if an error occurs requesting or executing the TwiML defined by sms.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="smsApplicationSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The 34 character sid of the application Twilio should use to handle SMSs sent to this number. If a SmsApplicationSid is present, Twilio will ignore all of the SMS urls above and use those set on the application instead.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSidDestination" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The unique 34 character id of the account to which you wish to transfer this phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="delete-incoming-phone-number" substitutionGroup="mule:abstract-message-processor" type="DeleteIncomingPhoneNumberType">
+    <xs:annotation>
+      <xs:documentation>Release this phone number from your account. Twilio will no longer answer calls to this number, and you will stop being billed the monthly phone number fee. The phone number will eventually be recycled and potentially given to another customer, so use with care.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DeleteIncomingPhoneNumberType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="incomingPhoneNumberSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the incoming phone number sid to delete</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-incoming-phone-numbers" substitutionGroup="mule:abstract-message-processor" type="GetIncomingPhoneNumbersType">
+    <xs:annotation>
+      <xs:documentation>Returns a list of IncomingPhoneNumber resource representations, each representing a phone number given to your account. The list includes paging information.
+&lt;p/&gt;
+An IncomingPhoneNumber instance resource represents a Twilio phone number purchased from Twilio or ported to Twilio.
+&lt;p/&gt;
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetIncomingPhoneNumbersType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="phoneNumber" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show the incoming phone number resources that match this pattern. You can specify partial numbers and use '*' as a wildcard for any digit.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show the incoming phone number resources with friendly names that exactly match this name.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="add-incoming-phone-number-by-phone-number" substitutionGroup="mule:abstract-message-processor" type="AddIncomingPhoneNumberByPhoneNumberType">
+    <xs:annotation>
+      <xs:documentation>Adds a new phone number to your account. If a phone number is found for your request, Twilio will add it to your account and bill you for the first month's cost of the phone number. If Twilio can't find a phone number to match your request, you will receive an HTTP 400 with Twilio error code 21452.
+If successful, Twilio responds with a representation of the new phone number that was assigned to your account.
+&lt;p/&gt;
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="AddIncomingPhoneNumberByPhoneNumberType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="phoneNumber" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The phone number you want to purchase. The number should be formated starting with a '+' followed by the country code and the number in E.164 format e.g., '+15105555555'.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A human readable description of the new incoming phone number. Maximum 64 characters. Defaults to a formatted version of the number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voiceUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The URL that Twilio should request when somebody dials the new phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="voiceMethod" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method that should be used to request the VoiceUrl. Must be either GET or POST. Defaults to POST.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voice-fallback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request if an error occurs requesting or executing the TwiML at Url.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="status-callback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request to pass status parameters (such as call ended) to your application.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="voiceCallerIdLookup" use="optional" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>Do a lookup of a caller's name from the CNAM database and post it to your app. Either true or false. Defaults to false.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voiceApplicationSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The 34 character sid of the application Twilio should use to handle phone calls to the new number. If a VoiceApplicationSid is present, Twilio will ignore all of the voice urls above and use those set on the application.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="smsUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The URL that Twilio should request when somebody sends an SMS to the phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="smsMethod" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method that should be used to request the SmsUrl. Must be either GET or POST. Defaults to POST.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="sms-fallback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request if an error occurs requesting or executing the TwiML defined by SmsUrl.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="smsApplicationSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The 34 character sid of the application Twilio should use to handle SMSs sent to the new number. If a SmsApplicationSid is present, Twilio will ignore all of the SMS urls above and use those set on the application.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="add-incoming-phone-number-by-area-code" substitutionGroup="mule:abstract-message-processor" type="AddIncomingPhoneNumberByAreaCodeType">
+    <xs:annotation>
+      <xs:documentation>Adds a new phone number to your account. If a phone number is found for your request, Twilio will add it to your account and bill you for the first month's cost of the phone number. If Twilio can't find a phone number to match your request, you will receive an HTTP 400 with Twilio error code 21452.
+If successful, Twilio responds with a representation of the new phone number that was assigned to your account.
+&lt;p/&gt;
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="AddIncomingPhoneNumberByAreaCodeType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="areaCode" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The area code in which you'd like a new incoming phone number. Any three digit, US area code is valid. Twilio will provision a random phone number within this area code for you.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A human readable description of the new incoming phone number. Maximum 64 characters. Defaults to a formatted version of the number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voiceUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The URL that Twilio should request when somebody dials the new phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="voiceMethod" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method that should be used to request the VoiceUrl. Must be either GET or POST. Defaults to POST.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voice-fallback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request if an error occurs requesting or executing the TwiML at Url.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="status-callback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request to pass status parameters (such as call ended) to your application.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="voiceCallerIdLookup" use="optional" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>Do a lookup of a caller's name from the CNAM database and post it to your app. Either true or false. Defaults to false.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voiceApplicationSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The 34 character sid of the application Twilio should use to handle phone calls to the new number. If a VoiceApplicationSid is present, Twilio will ignore all of the voice urls above and use those set on the application.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="smsUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The URL that Twilio should request when somebody sends an SMS to the phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="smsMethod" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method that should be used to request the SmsUrl. Must be either GET or POST. Defaults to POST.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="sms-fallback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request if an error occurs requesting or executing the TwiML defined by SmsUrl.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="smsApplicationSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The 34 character sid of the application Twilio should use to handle SMSs sent to the new number. If a SmsApplicationSid is present, Twilio will ignore all of the SMS urls above and use those set on the application.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-application" substitutionGroup="mule:abstract-message-processor" type="GetApplicationType">
+    <xs:annotation>
+      <xs:documentation>Returns an application resource matching the given application sid.
+&lt;p/&gt;
+An Application instance resource represents an application that you have created with Twilio. An application inside of Twilio is just a set of URLs and other configuration data that tells Twilio how to behave when one of your Twilio numbers receives a call or SMS message.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetApplicationType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="applicationSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the application sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="update-application" substitutionGroup="mule:abstract-message-processor" type="UpdateApplicationType">
+    <xs:annotation>
+      <xs:documentation>Tries to update the application's properties, and returns the updated resource representation if successful.
+&lt;p/&gt;
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="UpdateApplicationType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="applicationSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the application sid to update</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A human readable description of the application, with maximum length 64 characters.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="apiVersion" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Requests to this application's URLs will start a new TwiML session with this API version. Either 2010-04-01 or 2008-08-01.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voiceUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The URL that Twilio should request when somebody dials a phone number assigned to this application.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="voiceMethod" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method that should be used to request the VoiceUrl. Either GET or POST.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voice-fallback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request if an error occurs requesting or executing the TwiML defined by VoiceUrl.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="status-callback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request to pass status parameters (such as call ended) to your application.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="voiceCallerIdLookup" use="optional" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>Do a lookup of a caller's name from the CNAM database and post it to your app. Either true or false.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="smsUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The URL that Twilio should request when somebody sends an SMS to a phone number assigned to this application.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="smsMethod" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method that should be used to request the SmsUrl. Either GET or POST.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="sms-fallback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request if an error occurs requesting or executing the TwiML defined by SmsUrl.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="sms-status-callback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Twilio will make a POST request to this flow to pass status parameters (such as sent or failed) to your application if you specify this application's Sid as the ApplicationSid on an outgoing SMS request.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="delete-application" substitutionGroup="mule:abstract-message-processor" type="DeleteApplicationType">
+    <xs:annotation>
+      <xs:documentation>Delete this application. If this application's sid is assigned to any IncomingPhoneNumber resources as a VoiceApplicationSid or SmsApplicationSid it will be removed.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DeleteApplicationType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="applicationSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the application sid to use</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-all-applications" substitutionGroup="mule:abstract-message-processor" type="GetAllApplicationsType">
+    <xs:annotation>
+      <xs:documentation>Returns a list of Application resource representations, each representing an application within your account. The list includes paging information.
+&lt;p/&gt;
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetAllApplicationsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only return the Application resources with friendly names that exactly match this name.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="create-application" substitutionGroup="mule:abstract-message-processor" type="CreateApplicationType">
+    <xs:annotation>
+      <xs:documentation>Creates a new application within your account. If successful, Twilio responds with a representation of the new application.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CreateApplicationType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A human readable description of the new application. Maximum 64 characters.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="apiVersion" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Requests to this application's URLs will start a new TwiML session with this API version. Either 2010-04-01 or 2008-08-01. Defaults to your account's default API version.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voiceUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The URL that Twilio should request when somebody dials a phone number assigned to this application</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="voiceMethod" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method that should be used to request the VoiceUrl. Must be either GET or POST. Defaults to POST.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voice-fallback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request if an error occurs requesting or executing the TwiML at Url.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="status-callback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request to pass status parameters (such as call ended) to your application.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="voiceCallerIdLookup" use="optional" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>Do a lookup of a caller's name from the CNAM database and post it to your app. Either true or false. Defaults to false.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="smsUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The URL that Twilio should request when somebody sends an SMS to a phone number assigned to this application.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="smsMethod" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method that should be used to request the SmsUrl. Must be either GET or POST. Defaults to POST.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="sms-fallback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request if an error occurs requesting or executing the TwiML defined by SmsUrl.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="sms-status-callback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Twilio will make a POST request to this flow to pass status parameters (such as sent or failed) to your application if you specify this application's Sid as the ApplicationSid on an outgoing SMS request.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-call" substitutionGroup="mule:abstract-message-processor" type="GetCallType">
+    <xs:annotation>
+      <xs:documentation>Returns the single Call resource identified by the given call sid.
+&lt;p/&gt;
+A Call instance resource represents a connection between a telephone and Twilio. This may be inbound, when a person calls your application, or outbound, when your application initiates the call, either via the REST API (see Making Calls) or during a call via the TwiML &lt;Dial&gt; verb. The Calls list resource represents the set of phone calls made to and from an account.
+&lt;p/&gt;
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetCallType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="callSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the call sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-calls" substitutionGroup="mule:abstract-message-processor" type="GetCallsType">
+    <xs:annotation>
+      <xs:documentation>Returns a list of phone calls made to and from the account identified by the given account sid. The list includes paging information and is sorted by DateUpdated with most-recent calls first.
+&lt;p/&gt;
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetCallsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="to" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show calls to this phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="from" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show calls from this phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="status" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show calls currently in this status. May be queued, ringing, in-progress, completed, failed, busy, or no-answer.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="startTime" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show calls that started on this date, given as YYYY-MM-DD. Also supports inequalities, such as StartTime&lt;=YYYY-MM-DD for calls that started at or before midnight on a date, and StartTime&gt;=YYYY-MM-DD for calls that started at or after midnight on a date.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="make-call" substitutionGroup="mule:abstract-message-processor" type="MakeCallType">
+    <xs:annotation>
+      <xs:documentation>Initiates a call using the given paramaters. Only one of url or applicationSid parameters must be specified, not both. Returns the call representation.
+&lt;p/&gt;
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="MakeCallType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="from" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The phone number to use as the caller id. Format with a '+' and country code e.g., +16175551212 (E.164 format). Must be a Twilio number or a valid outgoing caller id for your account.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="to" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The number to call formatted with a '+' and country code e.g., +16175551212 (E.164 format). Twilio will also accept unformatted US numbers e.g., (415) 555-1212, 415-555-1212.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="url" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The fully qualified URL that should be consulted when the call connects. Just like when you set a URL on a phone number for handling inbound calls.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="applicationSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The 34 character sid of the application Twilio should use to handle this phone call. If this parameter is present, Twilio will ignore all of the voice URLs passed and use the URLs set on the application.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="method" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method Twilio should use when making its request to the above Url parameter's value. Defaults to POST. If an ApplicationSid parameter is present, this parameter is ignored.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="fallback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request if an error occurs requesting or executing the TwiML at Url. If an ApplicationSid parameter is present, this parameter is ignored.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="status-callback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will request when the call ends to notify your app. If an ApplicationSid parameter is present, this parameter is ignored.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="sendDigits" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A string of keys to dial after connecting to the number. Valid digits in the string include: any digit (0-9), '#' and '*'. For example, if you connected to a company phone number, and wanted to dial extension 1234 and then the pound key, use SendDigits=1234#. Remember to URL-encode this string, since the '#' character has special meaning in a URL.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="ifMachine" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Tell Twilio to try and determine if a machine (like voicemail) or a human has answered the call. Possible values are Continue and Hangup.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="timeout" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The integer number of seconds that Twilio should allow the phone to ring before assuming there is no answer. Default is 60 seconds, the maximum is 999 seconds. Note, you could set this to a low value, such as 15, to hangup before reaching an answering machine or voicemail.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="change-call-state" substitutionGroup="mule:abstract-message-processor" type="ChangeCallStateType">
+    <xs:annotation>
+      <xs:documentation>Modify the state of a live call. Returns the call representation.
+&lt;p/&gt;
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="ChangeCallStateType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="callSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the call sid to modify</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="url" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A valid URL that returns TwiML. Twilio will immediately redirect the call to the new TwiML.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="method" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method Twilio should use when requesting the above URL. Defaults to POST.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="status" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Either canceled or completed. Specifying canceled will attempt to hangup calls that are queued or ringing but not affect calls already in progress. Specifying completed will attempt to hang up a call even if it's already in progress.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-conference" substitutionGroup="mule:abstract-message-processor" type="GetConferenceType">
+    <xs:annotation>
+      <xs:documentation>Returns a representation of the conference identified by the given conference id.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetConferenceType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="conferenceSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the conference sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-conferences" substitutionGroup="mule:abstract-message-processor" type="GetConferencesType">
+    <xs:annotation>
+      <xs:documentation>Returns a list of conferences within an account. The list includes paging information and is sorted by DateUpdated, with most recent conferences first.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetConferencesType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="status" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show conferences currently in with this status. May be init, in-progress, or completed.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="friendlyName" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>List conferences who's FriendlyName is the exact match of this string.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dateCreated" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show conferences that started on this date, given as YYYY-MM-DD. You can also specify inequality, such as DateCreated&lt;=YYYY-MM-DD for conferences that started at or before midnight on a date, and DateCreated&gt;=YYYY-MM-DD for conferences that started at or after midnight on a date.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dateUpdated" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show conferences that were last updated on this date, given as YYYY-MM-DD. You can also specify inequality, such as DateUpdated&lt;=YYYY-MM-DD for conferences that were last updated at or before midnight on a date, and DateUpdated&gt;=YYYY-MM-DD for conferences that were updated at or after midnight on a date.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-participant" substitutionGroup="mule:abstract-message-processor" type="GetParticipantType">
+    <xs:annotation>
+      <xs:documentation>Returns a representation of this participant.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetParticipantType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="conferenceSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the conference sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="callSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the call sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="update-participant-status" substitutionGroup="mule:abstract-message-processor" type="UpdateParticipantStatusType">
+    <xs:annotation>
+      <xs:documentation>Updates the participant status. Returns the participant representation.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="UpdateParticipantStatusType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="conferenceSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the conference sid to use</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="callSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the call sid to use</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="muted" use="required" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>Specifying true will mute the participant, while false will un-mute.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="delete-participant" substitutionGroup="mule:abstract-message-processor" type="DeleteParticipantType">
+    <xs:annotation>
+      <xs:documentation>Kick this participant from the conference. Returns HTTP 204 (No Content), with no body, if the participant was successfuly booted from the conference.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DeleteParticipantType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="conferenceSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the conference sid to use</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="callSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the call sid to use</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-participants" substitutionGroup="mule:abstract-message-processor" type="GetParticipantsType">
+    <xs:annotation>
+      <xs:documentation>Returns the list of participants in the conference identified by the given conference sid.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetParticipantsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="conferenceSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the conference sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="muted" use="optional" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>Only show participants that are muted or unmuted. Either true or false.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-sms-message" substitutionGroup="mule:abstract-message-processor" type="GetSmsMessageType">
+    <xs:annotation>
+      <xs:documentation>Returns a single SMS message specified by the provided SMS message sid.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetSmsMessageType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="smsMessageSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the SMS message sid to use in the query.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-all-sms-messages" substitutionGroup="mule:abstract-message-processor" type="GetAllSmsMessagesType">
+    <xs:annotation>
+      <xs:documentation>Returns a list of SMS messages associated with your account. The list includes paging information and is sorted by DateSent, with most recent messages first.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetAllSmsMessagesType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="to" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show SMS messages to this phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="from" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show SMS messages from this phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dateSent" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show SMS messages sent on this date, given as YYYY-MM-DD. Example: DateSent=2009-07-06. You can also specify inequality, such as DateSent&lt;=YYYY-MM-DD for SMS messages that were sent on or before midnight on a date, and DateSent&gt;=YYYY-MM-DD for SMS messages sent on or after midnight on a date.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="send-sms-message" substitutionGroup="mule:abstract-message-processor" type="SendSmsMessageType">
+    <xs:annotation>
+      <xs:documentation>Send an outgoing SMS message. By specifying an SMS URL for your SMS enabled Twilio phone number, Twilio will make a request to your application to notify you when someone replies to a message you send.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="SendSmsMessageType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="from" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A Twilio number enabled for SMS. Only phone numbers purchased from Twilio work here; you cannot (for example) spoof SMS messages from your own cell phone number.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="to" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The destination phone number. Format with a '+' and country code e.g., +16175551212 (E.164 format). Twilio will also accept unformatted US numbers e.g., (415) 555-1212, 415-555-1212.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="body" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The text of the message you want to send, limited to 160 characters.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="status-callback-flow-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>A flow that Twilio will POST to when your message is processed. Twilio will POST the SmsSid as well as SmsStatus=sent or SmsStatus=failed.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="applicationSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Twilio will POST SmsSid as well as SmsStatus=sent or SmsStatus=failed to the URL in the SmsStatusCallback property of this Application. If the StatusCallback parameter above is also passed, the Application's SmsStatusCallback parameter will take precedence.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-recording" substitutionGroup="mule:abstract-message-processor" type="GetRecordingType">
+    <xs:annotation>
+      <xs:documentation>Returns one of several representations depending on the given recording type.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetRecordingType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="recordingSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the recording sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="recordingType" use="required" type="RecordingTypeEnumType">
+          <xs:annotation>
+            <xs:documentation>the recording type to use</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="delete-recording" substitutionGroup="mule:abstract-message-processor" type="DeleteRecordingType">
+    <xs:annotation>
+      <xs:documentation>Deletes a recording from your account. If successful, returns HTTP 204 (No Content) with no body.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DeleteRecordingType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="recordingSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the recording sid to use.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-recordings" substitutionGroup="mule:abstract-message-processor" type="GetRecordingsType">
+    <xs:annotation>
+      <xs:documentation>Returns a list of Recording resource representations, each representing a recording generated during the course of a phone call. The list includes paging information.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetRecordingsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="callSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Show only recordings made during the call given by this sid.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dateCreated" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show recordings created on the given date. Should be formatted as YYYY-MM-DD. You can also specify inequality, such as DateCreated&lt;=YYYY-MM-DD for recordings generated at or before midnight on a date, and DateCreated&gt;=YYYY-MM-DD for recordings generated at or after midnight on a date.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-transcription-by-transcription-sid" substitutionGroup="mule:abstract-message-processor" type="GetTranscriptionByTranscriptionSidType">
+    <xs:annotation>
+      <xs:documentation>Returns a single Transcription resource representation identified by the given transcription sid.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetTranscriptionByTranscriptionSidType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="transcriptionSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the transcription sid to use in the query.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="transcriptionFormat" use="required" type="TranscriptionFormatEnumType">
+          <xs:annotation>
+            <xs:documentation>the transcription format of the response</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-transcriptions" substitutionGroup="mule:abstract-message-processor" type="GetTranscriptionsType">
+    <xs:annotation>
+      <xs:documentation>Returns a set of Transcription resource representations that includes paging information, sorted by 'DateUpdated', with most recent transcripts first.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetTranscriptionsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="recordingSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the recording sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="transcriptionFormat" use="required" type="TranscriptionFormatEnumType">
+          <xs:annotation>
+            <xs:documentation>the transcription format for the response</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-notification" substitutionGroup="mule:abstract-message-processor" type="GetNotificationType">
+    <xs:annotation>
+      <xs:documentation>Return a notificaction resource for the given notification sid.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetNotificationType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the account sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="notificationSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the notification sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="delete-notification" substitutionGroup="mule:abstract-message-processor" type="DeleteNotificationType">
+    <xs:annotation>
+      <xs:documentation>Deletes the notification identified by {NotificationSid from an account's log.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DeleteNotificationType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="notificationSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the notification sid to use</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-all-notifications" substitutionGroup="mule:abstract-message-processor" type="GetAllNotificationsType">
+    <xs:annotation>
+      <xs:documentation>Returns a list of notifications generated for an account. The list includes paging information and is sorted by DateUpdated, with most recent notifications first.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetAllNotificationsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="log" use="optional" type="integerType">
+          <xs:annotation>
+            <xs:documentation>An integer log level corresponding to the type of notification: 0 is ERROR, 1 is WARNING.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="messageDate" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show notifications for this date. Should be formatted as YYYY-MM-DD. You can also specify inequality, such as MessageDate&lt;=YYYY-MM-DD for messages logged at or before midnight on a date, and MessageDate&gt;=YYYY-MM-DD for messages logged at or after midnight on a date.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-notifications-by-call-sid" substitutionGroup="mule:abstract-message-processor" type="GetNotificationsByCallSidType">
+    <xs:annotation>
+      <xs:documentation>Returns a list of notifications generated for an account. The list includes paging information and is sorted by DateUpdated, with most recent notifications first.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetNotificationsByCallSidType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="callSid" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the call sid to use in the query</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="log" use="optional" type="integerType">
+          <xs:annotation>
+            <xs:documentation>An integer log level corresponding to the type of notification: 0 is ERROR, 1 is WARNING.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="messageDate" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Only show notifications for this date. Should be formatted as YYYY-MM-DD. You can also specify inequality, such as MessageDate&lt;=YYYY-MM-DD for messages logged at or before midnight on a date, and MessageDate&gt;=YYYY-MM-DD for messages logged at or after midnight on a date.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-sandbox" substitutionGroup="mule:abstract-message-processor" type="GetSandboxType">
+    <xs:annotation>
+      <xs:documentation>Returns the Sandbox resource associated with the account identified by {YourAccountSid. Twilio accounts upgraded prior to February 2010 may not have a Sandbox resource, and in this case you will receive a 404 (Not Found) response.
+&lt;p/&gt;
+The Sandbox resource gives you programatic access to your Twilio Developer Sandbox phone number. Using this resource you can get the phone number and PIN for your sandbox, view the current voice and SMS URLs and update those URLs just like any other IncomingPhoneNumber resource on a Full Twilio Account.
+&lt;p/&gt;
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetSandboxType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/twilio" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="update-sandbox" substitutionGroup="mule:abstract-message-processor" type="UpdateSandboxType">
+    <xs:annotation>
+      <xs:documentation>You can POST to the Sandbox resource to update the TwiML voice and SMS URLs associated with the sandbox number.
+&lt;p/&gt;
+The Sandbox resource gives you programatic access to your Twilio Developer Sandbox phone number. Using this resource you can get the phone number and PIN for your sandbox, view the current voice and SMS URLs and update those URLs just like any other IncomingPhoneNumber resource on a Full Twilio Account.
+&lt;p/&gt;
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="UpdateSandboxType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="accountSid" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>optionally override globally configured Account SID</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="voiceUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The URL that Twilio should request when somebody calls this sandbox.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="voiceMethod" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method that should be used to request the above URL. Must be either GET or POST. Defaults to POST.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="smsUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The URL that Twilio should request when somebody sends an SMS to the sandbox.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/twilio" name="smsMethod" use="optional" type="HttpMethodEnumType">
+          <xs:annotation>
+            <xs:documentation>The HTTP method that should be used to request the SmsUrl. Must be either GET or POST. Defaults to POST.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="TranscriptionFormatEnumType">
+    <xs:annotation>
+      <xs:documentation></xs:documentation>
+    </xs:annotation>
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="XML">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="TXT">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="HttpMethodEnumType">
+    <xs:annotation>
+      <xs:documentation></xs:documentation>
+    </xs:annotation>
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="GET">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="POST">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="RecordingTypeEnumType">
+    <xs:annotation>
+      <xs:documentation></xs:documentation>
+    </xs:annotation>
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="WAV">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="MP3">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="XML">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="AccountStatusEnumType">
+    <xs:annotation>
+      <xs:documentation>Represents the status of a Twilio account.
+&lt;p/&gt;
+These enum constants can be used as a search parameter or to update the account status.</xs:documentation>
+    </xs:annotation>
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="SUSPENDED">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="ACTIVE">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="CLOSED">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="integerType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:integer"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="decimalType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:decimal"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="floatType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:float"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="doubleType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:double"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="dateTimeType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:dateTime"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="longType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:long"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="byteType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:byte"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="booleanType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:boolean"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="anyUriType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:anyURI"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="charType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:minLength value="1"></xs:minLength>
+          <xs:maxLength value="1"></xs:maxLength>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+</xs:schema>
