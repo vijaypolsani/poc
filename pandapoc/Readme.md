@@ -16,3 +16,5 @@ of information out of the complete content and MMS support is extended soon.
 
 Stack: Twilio SMS for Sending and Receiving SMS. Zillow API for Property Data queries. Mule for ESB 
 orchestration. CloudHub for IPAAS runtime. Git for source control.
+
+Note:** If your Twilio account is Trail, then you need to explicitly register your phone number to receive & send messages.

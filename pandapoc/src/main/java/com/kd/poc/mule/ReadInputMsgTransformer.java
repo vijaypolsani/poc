@@ -25,6 +25,7 @@ public class ReadInputMsgTransformer extends AbstractMessageTransformer implemen
 		else
 			message.setOutboundProperty("Body", "Got empty SMS Body.");
 		if (from != null && ((String) from).trim().length() != 0) {
+			from.toString().replaceAll("\\s+", "");
 			message.setOutboundProperty("From", from);
 		} else
 			message.setOutboundProperty("From", "16504096365");
