@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+		94583
+	
+	
+		Request successfully processed
+		0
+	
+	
+		
+			97789
+			California
+			San Ramon
+			94583
+			37.768426
+			-121.990792
+			http://www.zillow.com/mortgage-rates/ca/san-ramon/
+		
+		
+			
+			http://www.zillow.com/local-info/CA-94583-home-value/r_97789/
+			
+			
+			http://www.zillow.com/san-ramon-ca-94583/
+			http://www.zillow.com/san-ramon-ca-94583/fsbo/
+			http://www.zillow.com/san-ramon-ca-94583/pmf_pt/
+			http://www.zillow.com/san-ramon-ca-94583/sold/
+		
+		
+			
+				Median Condo Value
+				http://www.zillow.com/app?chartType=affordability_avgCondoValue&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart
+			
+			
+				Median Home Value
+				http://www.zillow.com/app?chartType=affordability_avgHomeValue&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart
+			
+			
+				Dollars Per Square Feet
+				http://www.zillow.com/app?chartType=affordability_pricePerSqft&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart
+			
+			
+				Zillow Home Value Index Distribution
+				http://www.zillow.com/app?chartType=affordability_ZindexByDistribution&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart
+			
+			
+				Home Type
+				http://www.zillow.com/app?chartType=home_homeType&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart
+			
+			
+				Owners vs. Renters
+				http://www.zillow.com/app?chartType=home_ownVsRent&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart
+			
+			
+				Home Size in Square Feet
+				http://www.zillow.com/app?chartType=home_homeSize&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart
+			
+			
+				Year Built
+				http://www.zillow.com/app?chartType=home_yearBuilt&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart
+			
+		
+		
+		
+			
+				Affordability
+				
+					
+						Affordability Data
+						
+							
+								Zillow Home Value Index
+								
+									
+										730800
+									
+									
+										168900
+									
+								
+							
+							
+								Median Single Family Home Value
+								
+									
+										772600
+									
+									
+										168500
+									
+								
+							
+							
+								Median Condo Value
+								
+									
+										334200
+									
+									
+										172200
+									
+								
+							
+							
+								Median 2-Bedroom Home Value
+								
+									
+										336400
+									
+									
+										128500
+									
+								
+							
+							
+								Median 3-Bedroom Home Value
+								
+									
+										696900
+									
+									
+										161900
+									
+								
+							
+							
+								Median 4-Bedroom Home Value
+								
+									
+										785700
+									
+									
+										270500
+									
+								
+							
+							
+								Percent Homes Decreasing
+								
+									
+										0.002
+									
+									
+										0.196
+									
+								
+							
+							
+								Percent Listing Price Reduction
+								
+									
+										0.144
+									
+									
+										0.317
+									
+								
+							
+							
+								Median List Price Per Sq Ft
+								
+									
+										381
+									
+									
+										108
+									
+								
+							
+							
+								Median List Price
+								
+									
+										760000
+									
+									
+										195000
+									
+								
+							
+							
+								Median Sale Price
+								
+									
+										707800
+									
+									
+										205600
+									
+								
+							
+							
+								Homes For Sale
+								
+									
+										0
+									
+									
+										0
+									
+								
+							
+							
+								Homes Recently Sold
+								
+									
+										0
+									
+									
+										371515
+									
+								
+							
+							
+								Property Tax
+								
+									
+										4875
+									
+									
+										2081
+									
+								
+							
+							
+								Turnover (Sold Within Last Yr.)
+								
+									
+										0.046
+									
+									
+										0.04
+									
+								
+							
+							
+								Median Value Per Sq Ft
+								
+									
+										365
+									
+									
+										113
+									
+								
+							
+							
+								1-Yr. Change
+								
+									
+										0.208
+									
+									
+										0.071
+									
+								
+							
+							
+								Homes For Sale By Owner
+								
+									
+										
+									
+									
+										
+									
+								
+							
+							
+								New Construction
+								
+									
+										
+									
+									
+										
+									
+								
+							
+							
+								Foreclosures
+								
+									
+										
+									
+									
+										
+									
+								
+							
+						
+					
+				
+			
+			
+				Homes &amp; Real Estate
+				
+					
+						Homes &amp; Real Estate Data
+						
+							
+								Owners
+								
+									
+										0.66268764
+									
+								
+							
+							
+								Renters
+								
+									
+										0.33731236
+									
+								
+							
+							
+								Median Home Size (Sq. Ft.)
+								
+							
+							
+								Avg. Year Built
+								
+							
+							
+								Single-Family Homes
+								
+							
+							
+								Condos
+								
+							
+						
+					
+					
+						BuiltYear
+						
+							
+								&gt;2000
+								0.0584583548887
+							
+							
+								1940-1959
+								9.484393861E-4
+							
+							
+								1960-1979
+								0.5658734264528
+							
+							
+								1980-1999
+								0.3741162269356
+							
+						
+					
+					
+						Census Summary-HomeSize
+						
+							
+								&lt;1000sqft
+								0.1219237435008
+							
+							
+								&gt;3600sqft
+								0.0357885615251
+							
+							
+								1000-1400sqft
+								0.1422010398613
+							
+							
+								1400-1800sqft
+								0.2189774696707
+							
+							
+								1800-2400sqft
+								0.3150779896013
+							
+							
+								2400-3600sqft
+								0.1628249566724
+							
+						
+					
+					
+						Census Summary-HomeType
+						
+							
+								Condo
+								0.2209165687426
+							
+							
+								Other
+								0.0328185328185
+							
+							
+								SingleFamily
+								0.7455094846399
+							
+						
+					
+				
+			
+			
+				People
+				
+					
+						People Data
+						
+							
+								Median Household Income
+								
+									
+										44512.0130806292
+									
+								
+							
+							
+								Single Males
+								
+									
+										0.146462187349365
+									
+								
+							
+							
+								Single Females
+								
+									
+										0.124578258618535
+									
+								
+							
+							
+								Median Age
+								
+									
+										36
+									
+								
+							
+							
+								Homes With Kids
+								
+									
+										0.313623902816284
+									
+								
+							
+							
+								Average Household Size
+								
+									
+										2.58883240001203
+									
+								
+							
+							
+								Average Commute Time (Minutes)
+								
+									
+										26.375545725891282
+									
+								
+							
+						
+					
+				
+			
+		
+	

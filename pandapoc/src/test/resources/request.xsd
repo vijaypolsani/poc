@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="request" type="requestType"/>
+  <xs:element name="message" type="messageType"/>
+  <xs:element name="response" type="responseType"/>
+  <xs:complexType name="requestType">
+    <xs:sequence>
+      <xs:element type="xs:int" name="zip"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="messageType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="text"/>
+      <xs:element type="xs:byte" name="code"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="regionType">
+    <xs:sequence>
+      <xs:element type="xs:int" name="id"/>
+      <xs:element type="xs:string" name="state"/>
+      <xs:element type="xs:string" name="city"/>
+      <xs:element type="xs:int" name="zip"/>
+      <xs:element type="xs:float" name="latitude"/>
+      <xs:element type="xs:float" name="longitude"/>
+      <xs:element type="xs:anyURI" name="zmmrateurl"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="linksType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="main"/>
+      <xs:element type="xs:anyURI" name="affordability"/>
+      <xs:element type="xs:string" name="homesandrealestate"/>
+      <xs:element type="xs:string" name="people"/>
+      <xs:element type="xs:anyURI" name="forSale"/>
+      <xs:element type="xs:anyURI" name="forSaleByOwner"/>
+      <xs:element type="xs:anyURI" name="foreclosures"/>
+      <xs:element type="xs:anyURI" name="recentlySold"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="chartType">
+    <xs:sequence>
+      <xs:element name="name">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute type="xs:string" name="deprecated" use="optional"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="url">
+        <xs:simpleType>
+          <xs:restriction base="xs:anyURI">
+            <xs:enumeration value="http://www.zillow.com/app?chartType=affordability_avgCondoValue&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart"/>
+            <xs:enumeration value="http://www.zillow.com/app?chartType=affordability_avgHomeValue&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart"/>
+            <xs:enumeration value="http://www.zillow.com/app?chartType=affordability_pricePerSqft&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart"/>
+            <xs:enumeration value="http://www.zillow.com/app?chartType=affordability_ZindexByDistribution&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart"/>
+            <xs:enumeration value="http://www.zillow.com/app?chartType=home_homeType&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart"/>
+            <xs:enumeration value="http://www.zillow.com/app?chartType=home_ownVsRent&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart"/>
+            <xs:enumeration value="http://www.zillow.com/app?chartType=home_homeSize&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart"/>
+            <xs:enumeration value="http://www.zillow.com/app?chartType=home_yearBuilt&amp;graphType=barChart&amp;regionId=97789&amp;regionType=7&amp;service=chart"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="nameType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="deprecated" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="chartsType">
+    <xs:sequence>
+      <xs:element type="chartType" name="chart" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="marketType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="deprecated"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="valueType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="type" use="optional"/>
+        <xs:attribute type="xs:string" name="currency" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="zipType">
+    <xs:sequence>
+      <xs:element type="valueType" name="value"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="nationType">
+    <xs:sequence>
+      <xs:element type="valueType" name="value"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="valuesType" mixed="true">
+    <xs:sequence>
+      <xs:element type="zipType" name="zip" minOccurs="0"/>
+      <xs:element type="nationType" name="nation" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="attributeType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="name"/>
+      <xs:element type="valuesType" name="values" minOccurs="0"/>
+      <xs:element type="valueType" name="value" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="dataType">
+    <xs:sequence>
+      <xs:element type="attributeType" name="attribute" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tableType">
+    <xs:sequence>
+      <xs:element name="name">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Affordability Data"/>
+            <xs:enumeration value="Homes &amp; Real Estate Data"/>
+            <xs:enumeration value="BuiltYear"/>
+            <xs:enumeration value="Census Summary-HomeSize"/>
+            <xs:enumeration value="Census Summary-HomeType"/>
+            <xs:enumeration value="People Data"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="dataType" name="data"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tablesType">
+    <xs:sequence>
+      <xs:element type="tableType" name="table" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pageType">
+    <xs:sequence>
+      <xs:element name="name">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Affordability"/>
+            <xs:enumeration value="Homes &amp; Real Estate"/>
+            <xs:enumeration value="People"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="tablesType" name="tables"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pagesType">
+    <xs:sequence>
+      <xs:element type="pageType" name="page" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="responseType">
+    <xs:sequence>
+      <xs:element type="regionType" name="region"/>
+      <xs:element type="linksType" name="links"/>
+      <xs:element type="chartsType" name="charts"/>
+      <xs:element type="marketType" name="market"/>
+      <xs:element type="pagesType" name="pages"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

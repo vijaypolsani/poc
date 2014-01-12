@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?><Graph author="user" created="Sat Jan 11 16:36:48 PST 2014" description="XML To XML" guiVersion="3.4.3.P" id="1389488786305" licenseCode="Unlicensed" licenseType="Unknown" modified="Sat Jan 11 16:36:48 PST 2014" modifiedBy="user" name="XML_To_XML" preview-file="/home/user/tmp/Test.xml" revision="1.0" showComponentDetails="false">
+<Global>
+<Metadata __index="25" __referenceCounter="1" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/tables/table/data/attribute" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="812f72fd-8d9c-4cc0-bc7a-58a29f2e6c42" _parent_id="__parent_id" _type="Input" id="750cccfd-602a-419c-81e6-1200d938261d">
+<Record fieldDelimiter="," name="attribute" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="25" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/tables/table/data/attribute/name" containerType="SINGLE" label="name" name="name" type="string"/>
+<Field __index="26" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/tables/table/data/attribute/values/zip/value/@type" containerType="SINGLE" label="type" name="type" type="string"/>
+<Field __index="27" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/tables/table/data/attribute/values/zip/value/@currency" containerType="SINGLE" label="currency" name="currency" type="string"/>
+<Field __index="28" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/tables/table/data/attribute/values/zip/value/@text()" containerType="SINGLE" label="text()" name="text" type="string"/>
+<Field __index="29" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/tables/table/data/attribute/values/nation/value/@type" containerType="SINGLE" label="type" name="type_1" type="string"/>
+<Field __index="30" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/tables/table/data/attribute/values/nation/value/@currency" containerType="SINGLE" label="currency" name="currency_1" type="string"/>
+<Field __index="31" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/tables/table/data/attribute/values/nation/value/@text()" containerType="SINGLE" label="text()" name="text_1" type="string"/>
+<Field __index="32" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/tables/table/data/attribute/value/@type" containerType="SINGLE" label="type" name="type_2" type="string"/>
+<Field __index="33" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/tables/table/data/attribute/value/@currency" containerType="SINGLE" label="currency" name="currency_2" type="string"/>
+<Field __index="34" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/tables/table/data/attribute/value/@text()" containerType="SINGLE" label="text()" name="text_2" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="22" __referenceCounter="1" __sourcePath="{}/response/pages/page/tables/table/data/attribute" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="e70090ee-883a-4fb1-b420-1423c78b3450" _parent_id="__parent_id" _type="Output" id="f29bb5c0-cd2d-4243-a05c-6e897e2b13a0">
+<Record fieldDelimiter="," name="attribute" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="22" __sourcePath="{}/response/pages/page/tables/table/data/attribute/name" containerType="SINGLE" label="name" name="name" type="string"/>
+<Field __index="23" __sourcePath="{}/response/pages/page/tables/table/data/attribute/values/zip/value/@type" containerType="SINGLE" label="type" name="type" type="string"/>
+<Field __index="24" __sourcePath="{}/response/pages/page/tables/table/data/attribute/values/zip/value/@currency" containerType="SINGLE" label="currency" name="currency" type="string"/>
+<Field __index="25" __sourcePath="{}/response/pages/page/tables/table/data/attribute/values/zip/value/@text()" containerType="SINGLE" label="text()" name="text" type="string"/>
+<Field __index="26" __sourcePath="{}/response/pages/page/tables/table/data/attribute/values/nation/value/@type" containerType="SINGLE" label="type" name="type_1" type="string"/>
+<Field __index="27" __sourcePath="{}/response/pages/page/tables/table/data/attribute/values/nation/value/@currency" containerType="SINGLE" label="currency" name="currency_1" type="string"/>
+<Field __index="28" __sourcePath="{}/response/pages/page/tables/table/data/attribute/values/nation/value/@text()" containerType="SINGLE" label="text()" name="text_1" type="string"/>
+<Field __index="29" __sourcePath="{}/response/pages/page/tables/table/data/attribute/value/@type" containerType="SINGLE" label="type" name="type_2" type="string"/>
+<Field __index="30" __sourcePath="{}/response/pages/page/tables/table/data/attribute/value/@currency" containerType="SINGLE" label="currency" name="currency_2" type="string"/>
+<Field __index="31" __sourcePath="{}/response/pages/page/tables/table/data/attribute/value/@text()" containerType="SINGLE" label="text()" name="text_2" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="18" __referenceCounter="1" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/charts/chart" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="03f6769d-3f2c-43c0-ab03-18629e212b84" _parent_id="__parent_id" _type="Input" id="0c16168f-e6ff-4085-a0ce-2a569637068c">
+<Record fieldDelimiter="," name="chart" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="18" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/charts/chart/name/@deprecated" containerType="SINGLE" label="deprecated" name="deprecated" type="string"/>
+<Field __index="19" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/charts/chart/name/@text()" containerType="SINGLE" label="text()" name="text" type="string"/>
+<Field __index="20" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/charts/chart/url" containerType="SINGLE" label="url" name="url" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="15" __referenceCounter="1" __sourcePath="{}/response/charts/chart" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="579faf76-3fb6-4bdb-bda5-36d7d28bb19c" _parent_id="__parent_id" _type="Output" id="40d0e24c-03ef-438e-b255-7cfac4e9aa25">
+<Record fieldDelimiter="," name="chart" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="15" __sourcePath="{}/response/charts/chart/name/@deprecated" containerType="SINGLE" label="deprecated" name="deprecated" type="string"/>
+<Field __index="16" __sourcePath="{}/response/charts/chart/name/@text()" containerType="SINGLE" label="text()" name="text" type="string"/>
+<Field __index="17" __sourcePath="{}/response/charts/chart/url" containerType="SINGLE" label="url" name="url" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics" _dataStructure="OBJECT" _id="__id" _type="Input" id="03f6769d-3f2c-43c0-ab03-18629e212b84">
+<Record fieldDelimiter="," name="demographics" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/request/zip" containerType="SINGLE" label="zip" name="zip" type="integer"/>
+<Field __index="1" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/message/text" containerType="SINGLE" label="text" name="text" type="string"/>
+<Field __index="2" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/message/code" containerType="SINGLE" label="code" name="code" type="integer"/>
+<Field __index="3" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/region/id" containerType="SINGLE" label="id" name="id" type="integer"/>
+<Field __index="4" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/region/state" containerType="SINGLE" label="state" name="state" type="string"/>
+<Field __index="5" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/region/city" containerType="SINGLE" label="city" name="city" type="string"/>
+<Field __index="6" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/region/zip" containerType="SINGLE" label="zip" name="zip_1" type="integer"/>
+<Field __index="7" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/region/latitude" containerType="SINGLE" label="latitude" name="latitude" type="number"/>
+<Field __index="8" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/region/longitude" containerType="SINGLE" label="longitude" name="longitude" type="number"/>
+<Field __index="9" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/region/zmmrateurl" containerType="SINGLE" label="zmmrateurl" name="zmmrateurl" type="string"/>
+<Field __index="10" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/links/main" containerType="SINGLE" label="main" name="main" type="string"/>
+<Field __index="11" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/links/affordability" containerType="SINGLE" label="affordability" name="affordability" type="string"/>
+<Field __index="12" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/links/homesandrealestate" containerType="SINGLE" label="homesandrealestate" name="homesandrealestate" type="string"/>
+<Field __index="13" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/links/people" containerType="SINGLE" label="people" name="people" type="string"/>
+<Field __index="14" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/links/forSale" containerType="SINGLE" label="forSale" name="forSale" type="string"/>
+<Field __index="15" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/links/forSaleByOwner" containerType="SINGLE" label="forSaleByOwner" name="forSaleByOwner" type="string"/>
+<Field __index="16" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/links/foreclosures" containerType="SINGLE" label="foreclosures" name="foreclosures" type="string"/>
+<Field __index="17" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/links/recentlySold" containerType="SINGLE" label="recentlySold" name="recentlySold" type="string"/>
+<Field __index="21" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/market/@deprecated" containerType="SINGLE" label="deprecated" name="deprecated" type="string"/>
+<Field __index="22" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/market/@text()" containerType="SINGLE" label="text()" name="text_1" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="23" __referenceCounter="1" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="03f6769d-3f2c-43c0-ab03-18629e212b84" _parent_id="__parent_id" _type="Input" id="66bb7962-2d63-4fc0-8ecc-1a840a76f223">
+<Record fieldDelimiter="," name="page" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="23" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/name" containerType="SINGLE" label="name" name="name" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="20" __referenceCounter="1" __sourcePath="{}/response/pages/page" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="579faf76-3fb6-4bdb-bda5-36d7d28bb19c" _parent_id="__parent_id" _type="Output" id="32984725-198a-4c41-9a38-7936700138df">
+<Record fieldDelimiter="," name="page" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="20" __sourcePath="{}/response/pages/page/name" containerType="SINGLE" label="name" name="name" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/response" _dataStructure="OBJECT" _id="__id" _type="Output" id="579faf76-3fb6-4bdb-bda5-36d7d28bb19c">
+<Record fieldDelimiter="," name="response" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/response/region/id" containerType="SINGLE" label="id" name="id" type="integer"/>
+<Field __index="1" __sourcePath="{}/response/region/state" containerType="SINGLE" label="state" name="state" type="string"/>
+<Field __index="2" __sourcePath="{}/response/region/city" containerType="SINGLE" label="city" name="city" type="string"/>
+<Field __index="3" __sourcePath="{}/response/region/zip" containerType="SINGLE" label="zip" name="zip" type="integer"/>
+<Field __index="4" __sourcePath="{}/response/region/latitude" containerType="SINGLE" label="latitude" name="latitude" type="number"/>
+<Field __index="5" __sourcePath="{}/response/region/longitude" containerType="SINGLE" label="longitude" name="longitude" type="number"/>
+<Field __index="6" __sourcePath="{}/response/region/zmmrateurl" containerType="SINGLE" label="zmmrateurl" name="zmmrateurl" type="string"/>
+<Field __index="7" __sourcePath="{}/response/links/main" containerType="SINGLE" label="main" name="main" type="string"/>
+<Field __index="8" __sourcePath="{}/response/links/affordability" containerType="SINGLE" label="affordability" name="affordability" type="string"/>
+<Field __index="9" __sourcePath="{}/response/links/homesandrealestate" containerType="SINGLE" label="homesandrealestate" name="homesandrealestate" type="string"/>
+<Field __index="10" __sourcePath="{}/response/links/people" containerType="SINGLE" label="people" name="people" type="string"/>
+<Field __index="11" __sourcePath="{}/response/links/forSale" containerType="SINGLE" label="forSale" name="forSale" type="string"/>
+<Field __index="12" __sourcePath="{}/response/links/forSaleByOwner" containerType="SINGLE" label="forSaleByOwner" name="forSaleByOwner" type="string"/>
+<Field __index="13" __sourcePath="{}/response/links/foreclosures" containerType="SINGLE" label="foreclosures" name="foreclosures" type="string"/>
+<Field __index="14" __sourcePath="{}/response/links/recentlySold" containerType="SINGLE" label="recentlySold" name="recentlySold" type="string"/>
+<Field __index="18" __sourcePath="{}/response/market/@deprecated" containerType="SINGLE" label="deprecated" name="deprecated" type="string"/>
+<Field __index="19" __sourcePath="{}/response/market/@text()" containerType="SINGLE" label="text()" name="text" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="24" __referenceCounter="1" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/tables/table" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="66bb7962-2d63-4fc0-8ecc-1a840a76f223" _parent_id="__parent_id" _type="Input" id="812f72fd-8d9c-4cc0-bc7a-58a29f2e6c42">
+<Record fieldDelimiter="," name="table" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="24" __sourcePath="{http://www.zillow.com/static/xsd/Demographics.xsd=ns0}/ns0:demographics/response/pages/page/tables/table/name" containerType="SINGLE" label="name" name="name" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="21" __referenceCounter="1" __sourcePath="{}/response/pages/page/tables/table" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="32984725-198a-4c41-9a38-7936700138df" _parent_id="__parent_id" _type="Output" id="e70090ee-883a-4fb1-b420-1423c78b3450">
+<Record fieldDelimiter="," name="table" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="21" __sourcePath="{}/response/pages/page/tables/table/name" containerType="SINGLE" label="name" name="name" type="string"/>
+</Record>
+</Metadata>
+<Dictionary>
+<Entry id="DictionaryEntry0" input="true" name="inputPayload" output="false" type="object"/>
+<Entry id="DictionaryEntry1" input="false" name="outputPayload" output="true" type="object"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node cacheInMemory="true" charset="UTF-8" enabled="enabled" fileURL="dict:outputPayload" guiName="XML WRITER" guiX="900" guiY="20" id="EXT_XML_WRITER0" type="EXT_XML_WRITER" xmlSchemaURL="./src/test/resources/request.xsd,/home/user/git/poc/pandapoc/src/test/resources/demographics.xsd">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<response xmlns:clover="http://www.cloveretl.com/ns/xmlmapping" clover:inPort="0">
+  <region>
+    <id>$0.id</id>
+    <state>$0.state</state>
+    <city>$0.city</city>
+    <zip>$0.zip</zip>
+    <latitude>$0.latitude</latitude>
+    <longitude>$0.longitude</longitude>
+    <zmmrateurl>$0.zmmrateurl</zmmrateurl>
+  </region>
+  <links>
+    <main>$0.main</main>
+    <affordability>$0.affordability</affordability>
+    <homesandrealestate>$0.homesandrealestate</homesandrealestate>
+    <people>$0.people</people>
+    <forSale>$0.forSale</forSale>
+    <forSaleByOwner>$0.forSaleByOwner</forSaleByOwner>
+    <foreclosures>$0.foreclosures</foreclosures>
+    <recentlySold>$0.recentlySold</recentlySold>
+  </links>
+  <charts>
+    <chart clover:inPort="1" clover:key="__parent_id" clover:parentKey="__id">
+      <name deprecated="$1.deprecated">$1.text</name>
+      <url>$1.url</url>
+    </chart>
+  </charts>
+  <market deprecated="$0.deprecated">$0.text</market>
+  <pages>
+    <page clover:inPort="2" clover:key="__parent_id" clover:parentKey="__id">
+      <name>$2.name</name>
+      <tables>
+        <table clover:inPort="3" clover:key="__parent_id" clover:parentKey="__id">
+          <name>$3.name</name>
+          <data>
+            <attribute clover:inPort="4" clover:key="__parent_id" clover:parentKey="__id">
+              <name>$4.name</name>
+              <values>
+                <zip>
+                  <value currency="$4.currency" type="$4.type">$4.text</value>
+                </zip>
+                <nation>
+                  <value currency="$4.currency_1" type="$4.type_1">$4.text_1</value>
+                </nation>
+              </values>
+              <value currency="$4.currency_2" type="$4.type_2">$4.text_2</value>
+            </attribute>
+          </data>
+        </table>
+      </tables>
+    </page>
+  </pages>
+</response>]]></attr>
+<attr name="_data_format"><![CDATA[XML]]></attr>
+<attr name="__rootGlobalElementName"><![CDATA[response]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'attribute' -&gt; 'attribute'" guiX="460" guiY="420" id="FOREACH_ATTRIBUTE_ATTRIBUTE" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+output.__parent_id = input.__parent_id;
+//END -> DO NOT REMOVE
+output.name = input.name;
+output.type = input.type;
+output.currency = input.currency;
+output.text = input.text;
+output.type_1 = input.type_1;
+output.currency_1 = input.currency_1;
+output.text_1 = input.text_1;
+output.type_2 = input.type_2;
+output.currency_2 = input.currency_2;
+output.text_2 = input.text_2;
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'chart' -&gt; 'chart'" guiX="460" guiY="120" id="FOREACH_CHART_CHART" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+output.__parent_id = input.__parent_id;
+//END -> DO NOT REMOVE
+output.deprecated = input.deprecated;
+output.text = input.text;
+output.url = input.url;
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'ns0:demographics' -&gt; 'response'" guiX="460" guiY="20" id="FOREACH_NS0_DEMOGRAPHICS_RESPONSE" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+//END -> DO NOT REMOVE
+output.zip = input.zip;
+output.text = input.text;
+output.id = input.id;
+output.state = input.state;
+output.city = input.city;
+output.latitude = input.latitude;
+output.longitude = input.longitude;
+output.zmmrateurl = input.zmmrateurl;
+output.main = input.main;
+output.affordability = input.affordability;
+output.homesandrealestate = input.homesandrealestate;
+output.people = input.people;
+output.forSale = input.forSale;
+output.forSaleByOwner = input.forSaleByOwner;
+output.foreclosures = input.foreclosures;
+output.recentlySold = input.recentlySold;
+output.deprecated = input.deprecated;
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'page' -&gt; 'page'" guiX="460" guiY="220" id="FOREACH_PAGE_PAGE" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+output.__parent_id = input.__parent_id;
+//END -> DO NOT REMOVE
+output.name = input.name;
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'table' -&gt; 'table'" guiX="460" guiY="320" id="FOREACH_TABLE_TABLE" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+output.__parent_id = input.__parent_id;
+//END -> DO NOT REMOVE
+output.name = input.name;
+]]></attr>
+</Node>
+<Node charset="UTF-8" enabled="enabled" fileURL="dict:inputPayload" guiName="XML READER" guiX="20" guiY="20" id="XML_READER0" type="XML_READER">
+<attr name="xmlSchemaURL"><![CDATA[./src/test/resources/request.xsd,/home/user/git/poc/pandapoc/src/test/resources/demographics.xsd]]></attr>
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context namespacePaths="ns0=&quot;http://www.zillow.com/static/xsd/Demographics.xsd&quot;" outPort="0" sequenceField="__id" xpath="/ns0:demographics">
+  <Mapping cloverField="zip" trim="true" xpath="request/zip"/>
+  <Mapping cloverField="text" trim="true" xpath="message/text"/>
+  <Mapping cloverField="code" trim="true" xpath="message/code"/>
+  <Mapping cloverField="id" trim="true" xpath="response/region/id"/>
+  <Mapping cloverField="state" trim="true" xpath="response/region/state"/>
+  <Mapping cloverField="city" trim="true" xpath="response/region/city"/>
+  <Mapping cloverField="zip_1" trim="true" xpath="response/region/zip"/>
+  <Mapping cloverField="latitude" trim="true" xpath="response/region/latitude"/>
+  <Mapping cloverField="longitude" trim="true" xpath="response/region/longitude"/>
+  <Mapping cloverField="zmmrateurl" trim="true" xpath="response/region/zmmrateurl"/>
+  <Mapping cloverField="main" trim="true" xpath="response/links/main"/>
+  <Mapping cloverField="affordability" trim="true" xpath="response/links/affordability"/>
+  <Mapping cloverField="homesandrealestate" trim="true" xpath="response/links/homesandrealestate"/>
+  <Mapping cloverField="people" trim="true" xpath="response/links/people"/>
+  <Mapping cloverField="forSale" trim="true" xpath="response/links/forSale"/>
+  <Mapping cloverField="forSaleByOwner" trim="true" xpath="response/links/forSaleByOwner"/>
+  <Mapping cloverField="foreclosures" trim="true" xpath="response/links/foreclosures"/>
+  <Mapping cloverField="recentlySold" trim="true" xpath="response/links/recentlySold"/>
+  <Mapping cloverField="deprecated" trim="true" xpath="response/market/@deprecated"/>
+  <Mapping cloverField="text_1" trim="true" xpath="response/market/text()"/>
+  <Context generatedKey="__parent_id" outPort="1" parentKey="__id" sequenceField="__id" xpath="response/charts/chart">
+    <Mapping cloverField="deprecated" trim="true" xpath="name/@deprecated"/>
+    <Mapping cloverField="text" trim="true" xpath="name/text()"/>
+    <Mapping cloverField="url" trim="true" xpath="url"/>
+  </Context>
+  <Context generatedKey="__parent_id" outPort="2" parentKey="__id" sequenceField="__id" xpath="response/pages/page">
+    <Mapping cloverField="name" trim="true" xpath="name"/>
+    <Context generatedKey="__parent_id" outPort="3" parentKey="__id" sequenceField="__id" xpath="tables/table">
+      <Mapping cloverField="name" trim="true" xpath="name"/>
+      <Context generatedKey="__parent_id" outPort="4" parentKey="__id" sequenceField="__id" xpath="data/attribute">
+        <Mapping cloverField="name" trim="true" xpath="name"/>
+        <Mapping cloverField="type" trim="true" xpath="values/zip/value/@type"/>
+        <Mapping cloverField="currency" trim="true" xpath="values/zip/value/@currency"/>
+        <Mapping cloverField="text" trim="true" xpath="values/zip/value/text()"/>
+        <Mapping cloverField="type_1" trim="true" xpath="values/nation/value/@type"/>
+        <Mapping cloverField="currency_1" trim="true" xpath="values/nation/value/@currency"/>
+        <Mapping cloverField="text_1" trim="true" xpath="values/nation/value/text()"/>
+        <Mapping cloverField="type_2" trim="true" xpath="value/@type"/>
+        <Mapping cloverField="currency_2" trim="true" xpath="value/@currency"/>
+        <Mapping cloverField="text_2" trim="true" xpath="value/text()"/>
+      </Context>
+    </Context>
+  </Context>
+</Context>
+]]></attr>
+<attr name="_data_format"><![CDATA[XML]]></attr>
+<attr name="__rootGlobalElementName"><![CDATA[{http://www.zillow.com/static/xsd/Demographics.xsd}demographics]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="FOREACH_ATTRIBUTE_ATTRIBUTE:0" guiBendpoints="" id="Edge9" inPort="Port 4 (in)" metadata="f29bb5c0-cd2d-4243-a05c-6e897e2b13a0" outPort="Port 0 (out)" toNode="EXT_XML_WRITER0:4"/>
+<Edge debugMode="true" fromNode="FOREACH_CHART_CHART:0" guiBendpoints="" id="Edge3" inPort="Port 1 (in)" metadata="40d0e24c-03ef-438e-b255-7cfac4e9aa25" outPort="Port 0 (out)" toNode="EXT_XML_WRITER0:1"/>
+<Edge debugMode="true" fromNode="FOREACH_NS0_DEMOGRAPHICS_RESPONSE:0" guiBendpoints="" id="Edge1" inPort="Port 0 (in)" metadata="579faf76-3fb6-4bdb-bda5-36d7d28bb19c" outPort="Port 0 (out)" toNode="EXT_XML_WRITER0:0"/>
+<Edge debugMode="true" fromNode="FOREACH_PAGE_PAGE:0" guiBendpoints="" id="Edge5" inPort="Port 2 (in)" metadata="32984725-198a-4c41-9a38-7936700138df" outPort="Port 0 (out)" toNode="EXT_XML_WRITER0:2"/>
+<Edge debugMode="true" fromNode="FOREACH_TABLE_TABLE:0" guiBendpoints="" id="Edge7" inPort="Port 3 (in)" metadata="e70090ee-883a-4fb1-b420-1423c78b3450" outPort="Port 0 (out)" toNode="EXT_XML_WRITER0:3"/>
+<Edge debugMode="true" fromNode="XML_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="03f6769d-3f2c-43c0-ab03-18629e212b84" outPort="Port 0 (out)" toNode="FOREACH_NS0_DEMOGRAPHICS_RESPONSE:0"/>
+<Edge debugMode="true" fromNode="XML_READER0:1" guiBendpoints="" id="Edge2" inPort="Port 0 (in)" metadata="0c16168f-e6ff-4085-a0ce-2a569637068c" outPort="Port 1 (out)" toNode="FOREACH_CHART_CHART:0"/>
+<Edge debugMode="true" fromNode="XML_READER0:2" guiBendpoints="" id="Edge4" inPort="Port 0 (in)" metadata="66bb7962-2d63-4fc0-8ecc-1a840a76f223" outPort="Port 2 (out)" toNode="FOREACH_PAGE_PAGE:0"/>
+<Edge debugMode="true" fromNode="XML_READER0:3" guiBendpoints="" id="Edge6" inPort="Port 0 (in)" metadata="812f72fd-8d9c-4cc0-bc7a-58a29f2e6c42" outPort="Port 3 (out)" toNode="FOREACH_TABLE_TABLE:0"/>
+<Edge debugMode="true" fromNode="XML_READER0:4" guiBendpoints="" id="Edge8" inPort="Port 0 (in)" metadata="750cccfd-602a-419c-81e6-1200d938261d" outPort="Port 4 (out)" toNode="FOREACH_ATTRIBUTE_ATTRIBUTE:0"/>
+</Phase>
+</Graph>
