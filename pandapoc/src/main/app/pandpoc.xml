@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core"
+<mule xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc"
+	xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper"
+	xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+	xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:twilio="http://www.mulesoft.org/schema/mule/twilio" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
@@ -17,53 +21,85 @@ http://www.mulesoft.org/schema/mule/ee/jdbc http://www.mulesoft.org/schema/mule/
 	<twilio:config name="vj" accountSid="${accountSID}"
 		authToken="${authToken}" doc:name="Twilio">
 		<twilio:http-callback-config
-			connector-ref="connector.http.mule.default" domain="${domain}" localPort="${http.port}" remotePort="${http.port}" />
+			connector-ref="connector.http.mule.default" domain="${domain}"
+			localPort="${http.port}" remotePort="${http.port}" />
 	</twilio:config>
-	<http:connector name="connector.http.mule.default" doc:name="HTTP\HTTPS"/>
-    <byte-array-to-string-transformer name="Byte_Array_to_String" doc:name="Byte Array to String"/>
-    <http:body-to-parameter-map-transformer name="Body_to_Parameter_Map" doc:name="Body to Parameter Map"/>
+	<http:connector name="connector.http.mule.default"
+		doc:name="HTTP\HTTPS" />
+	<byte-array-to-string-transformer
+		name="Byte_Array_to_String" doc:name="Byte Array to String" />
+	<http:body-to-parameter-map-transformer
+		name="Body_to_Parameter_Map" doc:name="Body to Parameter Map" />
+	<global-property name="From1" value="16504096365"
+		doc:name="Global Property" />
 	<flow name="sendSmsMessage" doc:name="sendSmsMessage">
 		<http:inbound-endpoint address="${inboundAddress}"
-			doc:name="HTTP" exchange-pattern="request-response" transformer-refs="Body_to_Parameter_Map"/>
-        <logger message="Input Messge from SMS: #[message.payload]" level="INFO" doc:name="Logger"/>
-        <custom-transformer class="com.kd.poc.mule.ReadInputMsgTransformer" doc:name="Input SMS Body Validation"/>
-        <logger message="Data Before Choice: #[message.payload]" level="INFO" doc:name="Logger"/>
-        <choice doc:name="Choice">
-            <when expression="message.payload.get('Body').trim().length() &gt; 5" evaluator="groovy">
-                <vm:outbound-endpoint exchange-pattern="one-way"  doc:name="PropertyDetails" path="propertDetails"/>
-                <custom-transformer class="com.kd.poc.mule.ReadInputMsgTransformer" doc:name="Format URLEncoded"/>
-                <http:outbound-endpoint exchange-pattern="request-response" host="www.zillow.com" port="80" path="webservice/GetDeepSearchResults.htm?zws-id=X1-ZWz1cu3vxb4ljf_52lx1&amp;address=#[message.payload.Body]" method="POST" doc:name="Zillow PropertySearch Call" transformer-refs="Byte_Array_to_String" responseTransformer-refs="Byte_Array_to_String"/>
-                <logger message="Data after Zillow Search Call: #[message.payload]" level="INFO" doc:name="Logger"/>
-            </when>
-            <when expression="message.payload.get('Body').trim().length() == 5" evaluator="groovy">
-                <vm:outbound-endpoint exchange-pattern="one-way"  doc:name="Demographics" path="demographics"/>
-                <http:outbound-endpoint exchange-pattern="request-response" host="www.zillow.com" port="80" path="webservice/GetDemographics.htm?zws-id=X1-ZWz1cu3vxb4ljf_52lx1&amp;zip=#[message.payload.Body]" method="POST" doc:name="Zillow Demographics Call" responseTransformer-refs="Byte_Array_to_String"/>
-                <logger message="Data after Demographics call: #[message.payload]" level="INFO" doc:name="Logger"/>
-            </when>
-            <otherwise>
-                <set-payload value="APP Home Listing Services did not understand your request!" doc:name="Dummy"/>
-            </otherwise>
-        </choice>
-        <vm:outbound-endpoint exchange-pattern="one-way" path="response" doc:name="response"/>
-        <custom-transformer class="com.kd.poc.mule.StorePDFfromZillow" doc:name="Convert to PDF for MMS"/>
-        <scripting:transformer doc:name="Script">
-            <scripting:script engine="Groovy"><![CDATA[payload.substring(0,159)]]></scripting:script>
-        </scripting:transformer>
-        <logger message="Data before sending SMS: #[message.payload]" level="INFO" doc:name="Logger"/>
+			doc:name="HTTP" exchange-pattern="request-response" transformer-refs="Body_to_Parameter_Map" />
+		<logger message="Input Messge from SMS: #[message.payload]"
+			level="INFO" doc:name="Logger" />
+		<custom-transformer class="com.kd.poc.mule.ReadInputMsgTransformer"
+			doc:name="Input SMS Body Validation" />
+		<logger message="Data Before Choice: #[message.payload]" level="INFO"
+			doc:name="Logger" />
+		<choice doc:name="Choice">
+			<when expression="message.payload.get('Body').trim().length() &gt; 5"
+				evaluator="groovy">
+				<vm:outbound-endpoint exchange-pattern="one-way"
+					doc:name="PropertyDetails" path="propertDetails" />
+				<custom-transformer class="com.kd.poc.mule.ReadInputMsgTransformer"
+					doc:name="Format URLEncoded" />
+				<http:outbound-endpoint exchange-pattern="request-response"
+					host="www.zillow.com" port="80"
+					path="webservice/GetDeepSearchResults.htm?zws-id=X1-ZWz1cu3vxb4ljf_52lx1&amp;address=#[message.payload.Body]"
+					method="POST" doc:name="Zillow PropertySearch Call"
+					transformer-refs="Byte_Array_to_String" responseTransformer-refs="Byte_Array_to_String" />
+				<logger message="Data after Zillow Search Call: #[message.payload]"
+					level="INFO" doc:name="Logger" />
+			</when>
+			<when expression="message.payload.get('Body').trim().length() == 5"
+				evaluator="groovy">
+				<vm:outbound-endpoint exchange-pattern="one-way"
+					doc:name="Demographics" path="demographics" />
+				<http:outbound-endpoint exchange-pattern="request-response"
+					host="www.zillow.com" port="80"
+					path="webservice/GetDemographics.htm?zws-id=X1-ZWz1cu3vxb4ljf_52lx1&amp;zip=#[message.payload.Body]"
+					method="POST" doc:name="Zillow Demographics Call"
+					responseTransformer-refs="Byte_Array_to_String" />
+				<logger message="Data after Demographics call: #[message.payload]"
+					level="INFO" doc:name="Logger" />
+			</when>
+			<otherwise>
+				<set-payload
+					value="APP Home Listing Services did not understand your request!"
+					doc:name="Dummy" />
+			</otherwise>
+		</choice>
+		<vm:outbound-endpoint exchange-pattern="one-way"
+			path="response" doc:name="response" />
+		<custom-transformer class="com.kd.poc.mule.StorePDFfromZillow"
+			doc:name="Convert to PDF for MMS" />
+		<scripting:transformer doc:name="Script">
+			<scripting:script engine="Groovy"><![CDATA[
+				message.setOutboundProperty('From', muleContext.getRegistry().lookupObject('From'))
+				payload.substring(0,159)
+			]]></scripting:script>
+		</scripting:transformer>
+		<logger
+			message="Data before sending SMS To address: #[message.outboundProperties['From']]] \n #[message] with Data: #[message.payload]"
+			level="INFO" doc:name="Logger" />
 
 		<twilio:send-sms-message config-ref="vj"
-			from="15104882577" to="16504096365" body="#[payload]"
-			doc:name="twilio" />
+			from="15104882577" to="#[message.outboundProperties['From']]" body="#[payload]" doc:name="twilio"/>
 	</flow>
 
 	<flow name="callbackFlow" doc:name="callbackFlow">
 		<logger message="Callback received: #[payload]" doc:name="Logger"
-			level="DEBUG" />
+			level="INFO" />
 
 		<http:body-to-parameter-map-transformer
 			doc:name="Body to Parameter Map" />
 
-		<logger message="SMS STATUS: #[payload['SmsStatus']]" level="DEBUG"
+		<logger message="SMS STATUS: #[payload['SmsStatus']]" level="INFO"
 			doc:name="Logger" />
 	</flow>
 </mule>
