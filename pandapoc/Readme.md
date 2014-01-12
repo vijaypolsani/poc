@@ -1,18 +1,26 @@
 This project is a POC to integrate the common API's available on the Programmable Web.
 
-Business Case: 
+Business Case: Property Listing & Neighborhood Demographics details over over SMS.
 
-User driving in a neighborhood is interested in the property details of the home on sale or listed then send an SMS containing the
-physical ADDRESS of the home (HouseNumber<space>address<space>zipcode) and would like to know the details of home. 
-	The user then sends an SMS with (HouseNumber<space>address<space>zipcode)(ex: 825 Maria Ln 98453)to the current developed 
-APP(JITHomeSaleListings) and get's the list of the available properties on sale. The user gets the functionality of the listed 
-sale properties on the go.
-	The user if sends an SMS with only (zipcode)(ex: 98453)then the APP(JITHomeSaleListings) sends the areas DEMOGRAPHICS back. 
+Inputs to SMS: 
+	ZIPCODE or Physical Address.
+Outputs to SMS from APP: 
+	When sent ZipCode, sends back area Demographics (MMS via PDF attachment)
+	When sent Address, sends back the property detials (MMS via PDF attachment)
+Limitations:
+	Since the Twilio Mule integration supports only SMS currently. we will send 160 chars of information only.
+Integration: 
+	Twilio SMS for Sending and Receiving SMS. Zillow API for Property Data. Mule for ESB orchestration. CloudHub for IPAAS.
+	
+
+Overview:
+
+	User driving in a neighborhood gets interested one a property on sale or wish to know more details on a home. User then
+sends an SMS to our APP called (Just In Time Home Listings - JitMls) containing the [Physical Address] of the home 
+(HouseNumber<space>Street<space>Lane<space>City<space>State) and will get the MMS with the PDF will all the property details. 
+	User decides to know Demographics details near the home listing. User then sends an SMS to our APP containing the [ZIPCODE] 
+of the city and will get the MMS with the PDF will all the Demographics details of the particular city. 
 
 Implementation: 
-Create an interface for returning the listed home properties for sale currently available for a given Zip-code sent via SMS.
-
-Integrate the Twilio SMS api for fetching the COMPLETE ADDRESS (or) ZIPCode via a users phone. Call Zillow API for the property details 
-and then convert them into PDF and send back the results as SMS to the caller. Also upload the same results into the company DropBox 
-account for future Analytics.
-
+Developed using the Mule ESB Studio. Deployed into CloudHub. Integrated Twilio SMS API Mule AnyConnect Adaptor along with REST 
+HTTP based Zillow API.
