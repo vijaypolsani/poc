@@ -13,11 +13,14 @@
   <classpathentry kind="var" path="M2_REPO/org/cometd/java/cometd-java-client/2.2.0/cometd-java-client-2.2.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/cometd/java/cometd-java-common/2.2.0/cometd-java-common-2.2.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/dropbox/core/dropbox-core-sdk/1.7.6/dropbox-core-sdk-1.7.6.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/force/api/force-wsc/29.0.0-hf1/force-wsc-29.0.0-hf1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/ftpserver/ftplet-api/1.0.2/ftplet-api-1.0.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/ftpserver/ftpserver-core/1.0.2/ftpserver-core-1.0.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/code/gson/gson/2.2.2/gson-2.2.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/htmlparser/htmlparser/1.6/htmlparser-1.6.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/itextpdf/itextpdf/5.4.5/itextpdf-5.4.5.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.3.0-rc1/jackson-core-2.3.0-rc1.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/inject/javax.inject/1/javax.inject-1.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/xml/bind/jaxb-impl/2.1.5/jaxb-impl-2.1.5.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/xml/bind/jaxb-xjc/2.2.5.1/jaxb-xjc-2.2.5.1.jar"/>
