@@ -17,4 +17,15 @@ of information out of the complete content and MMS support is extended soon.
 Stack: Twilio SMS for Sending and Receiving SMS. Zillow API for Property Data queries. Mule for ESB 
 orchestration. CloudHub for IPAAS runtime. Git for source control.
 
-Note:** If your Twilio account is Trail, then you need to explicitly register your phone number to receive & send messages.
+Note: Alternate Usage:
+
+curl -X POST http://pandora.cloudhub.io/sendsms
+-d "Body=94583" \
+-d "From=+16504096365"
+
+OR on Browser:
+
+http://pandora.cloudhub.io/sendsms?Body=94583&From=16504096365
+
+Note:** If your Twilio account is Trail one, then you need to explicitly register your the sending phone number 
+to receive & response messages.
